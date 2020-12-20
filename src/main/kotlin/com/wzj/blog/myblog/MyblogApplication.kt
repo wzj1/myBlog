@@ -1,0 +1,14 @@
+package com.wzj.blog.myblog
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+
+
+
+@SpringBootApplication
+class MyblogApplication
+
+fun main(args: Array<String>) {
+    runApplication<MyblogApplication>(*args)
+}
+
