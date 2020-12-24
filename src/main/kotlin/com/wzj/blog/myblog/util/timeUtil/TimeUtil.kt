@@ -12,13 +12,13 @@ object TimeUtil {
     /**
      * 获取随机数
      */
-    fun getRandom():Int=Random().nextInt(1000)
+    fun getRandom():Int=Random().nextInt(1000000000)
 
     /**
      * 获取时间
      */
     fun getTime():String{
-       return getDate("yyyyMMddhhmmss")
+       return getDate("hhmmss")
     }
 
     /**
@@ -29,7 +29,7 @@ object TimeUtil {
         var patterns:String = ""
         //判断日期格式  如果是空格式 则默认一个格式
         if (pattern.isNullOrBlank()){
-            patterns = "yyyyMMdd"
+            patterns = "yyyy-MM-dd"
         }
         val sdf = SimpleDateFormat(if (patterns.isNullOrBlank()) pattern else patterns)
         val fileAdd = sdf.format(Date())

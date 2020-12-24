@@ -29,7 +29,6 @@ class UpImageController {
     @ResponseBody
 //    @PostMapping(value = ["/uploadImg"], consumes = ["application/json"])
     @PostMapping(value = ["/uploadImg"], consumes = ["application/json","multipart/form-data;charset=UTF-8"])
-
     fun uploadPicture(@RequestParam(value="file",required=false) file: MultipartFile,@RequestBody data: ResultData<String>?, request: HttpServletRequest, response: HttpServletResponse):String{
         //判断参数
         val datas = CheckReceivedDataUtil.IsCheckReceivedDataNull(data)
@@ -39,7 +38,7 @@ class UpImageController {
         if (imageEntity.user_id<=0) return GetResultData.failure300("缺少userId!!!")
         if (imageEntity.image_type<=0) return GetResultData.failure300("缺少image_type类型!!!")
         val uploadUtil  = UploadImageUtil()
-        val path = uploadUtil.uploadPicture(file,null,request)
+        val path = uploadUtil.uploadPicture(file,request)
         if (path.isNullOrBlank()) return GetResultData.failure300("图片上传失败!!!")
        val image = ImageEntity()
         image.image_name=uploadUtil.getFileName()
@@ -84,7 +83,6 @@ class UpImageController {
      */
     @ResponseBody
     @PostMapping(value = ["/updateImg"], consumes = ["application/json","multipart/form-data;charset=UTF-8"])
-
     fun updateImg(@RequestParam(value = "file", required = false) file: MultipartFile, @RequestBody data: ResultData<String>?, request: HttpServletRequest, response: HttpServletResponse): String {
         //判断参数
         val datas = CheckReceivedDataUtil.IsCheckReceivedDataNull(data)
@@ -93,7 +91,7 @@ class UpImageController {
         val image = Gson().fromJson(data!!.data, ImageEntity::class.java)
         if (image.image_id<=0) return GetResultData.failure300("缺少image_id!!!")
         val uploadUtil  = UploadImageUtil()
-        val path = uploadUtil.uploadPicture(file, null, request)
+        val path = uploadUtil.uploadPicture(file,  request)
         if (path.isNullOrBlank()) return GetResultData.failure300("图片上传失败!!!")
         image.image_name = uploadUtil.getFileName()
         image.image_suffix = uploadUtil.getFileSuffix()

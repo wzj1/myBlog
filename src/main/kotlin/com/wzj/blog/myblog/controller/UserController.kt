@@ -32,7 +32,7 @@ open class UserController {
      */
     @ResponseBody
     @PostMapping(value = ["/registered"], consumes = ["application/json", "multipart/form-data;charset=UTF-8"])
-    fun registered(@RequestParam(value = "file", required = false) file: MultipartFile, @RequestBody data: ResultData<String>?, request: HttpServletRequest, response: HttpServletResponse):String{
+    fun registered(@RequestParam(value = "file", required = false) file: MultipartFile, data: ResultData<String>?, request: HttpServletRequest, response: HttpServletResponse):String{
         //判断参数
 //        val er = request.parameterNames
 //        while (er.hasMoreElements()) {
@@ -57,7 +57,7 @@ open class UserController {
         if (!file.isEmpty) {
             try {
                 val uploadUtil = UploadImageUtil()
-                val path = uploadUtil.uploadPicture(file, null, request)
+                val path = uploadUtil.uploadPicture(file, request)
                 val image = ImageEntity()
                 image.image_name = uploadUtil.getFileName()
                 image.image_suffix = uploadUtil.getFileSuffix()
@@ -136,7 +136,7 @@ open class UserController {
      */
     @ResponseBody
     @PostMapping(value = ["/updateUserInfo"], consumes = ["application/json", "multipart/form-data;charset=UTF-8"])
-    fun updateUserInfo(@RequestParam(value = "file", required = false) file: MultipartFile, @RequestBody data: ResultData<String>?, request: HttpServletRequest, response: HttpServletResponse):String{
+    fun updateUserInfo(@RequestParam(value = "file", required = false) file: MultipartFile,data: ResultData<String>?, request: HttpServletRequest, response: HttpServletResponse):String{
         //判断参数
         val datas = CheckReceivedDataUtil.IsCheckReceivedDataNull(data)
         if (!datas.isNullOrBlank()) return datas
@@ -161,7 +161,7 @@ open class UserController {
         if (!file.isEmpty) {
             try {
                 val uploadUtil = UploadImageUtil()
-                val path = uploadUtil.uploadPicture(file, null, request)
+                val path = uploadUtil.uploadPicture(file,  request)
                 val image = ImageEntity()
                 image.image_name = uploadUtil.getFileName()
                 image.image_suffix = uploadUtil.getFileSuffix()
