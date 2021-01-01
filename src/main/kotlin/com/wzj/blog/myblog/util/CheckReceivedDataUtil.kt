@@ -1,19 +1,20 @@
 package com.wzj.blog.myblog.util
 
+import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import com.wzj.blog.myblog.entity.ResultData
-import com.wzj.blog.myblog.returnUtil.GetResultData
+import com.wzj.blog.myblog.result.Result
 import org.apache.http.util.TextUtils
 
 
 object CheckReceivedDataUtil {
 
     fun IsCheckReceivedDataNull(data: ResultData<String>?):String?{
-        if (data==null) return GetResultData.failure300("参数异常")
-        if (data.data.isNullOrBlank()) return GetResultData.failure300("参数缺失!!!")
-        if (isBadJson(data.data)) return GetResultData.failure300("不是json格式!!!")
+        if (data==null) return Result.failure300("参数异常")
+        if (data.data.isNullOrBlank()) return Result.failure300("参数缺失!!!")
+        if (isBadJson(data.data)) return Result.failure300("不是json格式!!!")
         return null
     }
 
@@ -35,4 +36,18 @@ object CheckReceivedDataUtil {
         }
 
     }
+
+    fun <T> JsonToClass(t:Class<T>,json: String?):T?{
+        if (!isBadJson(json)) return null
+        try {
+            val tc = Gson().fromJson(json,t::class.java)
+            return  tc as T
+        } catch (e: Exception) {
+            return null
+        }
+
+    }
+
+
+
 }

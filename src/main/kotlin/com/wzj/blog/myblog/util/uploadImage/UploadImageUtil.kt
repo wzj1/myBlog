@@ -1,8 +1,7 @@
 package com.wzj.blog.myblog.util.uploadImage
 
-import com.wzj.blog.myblog.returnUtil.GetResultData
+import com.wzj.blog.myblog.result.Result
 import com.wzj.blog.myblog.util.timeUtil.TimeUtil
-import org.springframework.util.ClassUtils
 import org.springframework.web.multipart.MultipartFile
 import java.io.*
 import javax.servlet.http.HttpServletRequest
@@ -122,7 +121,7 @@ open class UploadImageUtil {
             newFile.createNewFile()
         }
 
-        GetResultData.log("上传到副本的文件： ${newFile.path}")
+        Result.log("上传到副本的文件： ${newFile.path}")
         // 将io上传到副本中
         try {
             file.transferTo(newFile)
@@ -137,7 +136,7 @@ open class UploadImageUtil {
         //文件时间
         ImageFileTime = fileTime
 
-        GetResultData.log("保存到数据库中的路径： $urlpath")
+        Result.log("保存到数据库中的路径： $urlpath")
         return urlpath
 
     }

@@ -16,7 +16,7 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>15</java.version>
+        <java.version>1.8</java.version>
         <kotlin.version>1.4.21</kotlin.version>
     </properties>
 
@@ -38,7 +38,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
 
         </dependency>
-
 
 
         <dependency>
@@ -121,6 +120,29 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <!--<version>1.18.4</version>-->
+            <scope>provided</scope>
+        </dependency>
+
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.session</groupId>-->
+<!--            <artifactId>spring-session-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.session</groupId>-->
+<!--            <artifactId>spring-session-data-redis</artifactId>-->
+<!--        </dependency>-->
+
+
     </dependencies>
 
     <build>
@@ -149,10 +171,11 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
-                    <!--                    <compilerPlugins>-->
-                    <!--                        <plugin>spring</plugin>-->
-                    <!--                        <plugin>jpa</plugin>-->
-                    <!--                    </compilerPlugins>-->
+
+                    <compilerPlugins>
+                        <plugin>spring</plugin>
+                        <plugin>jpa</plugin>
+                    </compilerPlugins>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -193,7 +216,6 @@
             <!--                </executions>-->
             <!--            </plugin>-->
         </plugins>
-
 
 
     </build>
@@ -240,7 +262,6 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
 
 
 </project>

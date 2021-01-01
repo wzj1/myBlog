@@ -23,7 +23,7 @@ object TimeUtil {
 
     /**
      * 获取日期
-     * 日期格式 如：默认 yyyyMMdd
+     * 日期格式 如：默认 yyyyMMdd  yyyyMMddHHmmssSSS  yyyy-MM-dd HH:mm:ss
      */
     fun getDate(pattern:String?):String{
         var patterns:String = ""

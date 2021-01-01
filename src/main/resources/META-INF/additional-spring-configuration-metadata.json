@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "allow-bean-definition-overriding",
+      "type": "java.lang.String",
+      "description": "Description for allow-bean-definition-overriding."
+  }
+] }

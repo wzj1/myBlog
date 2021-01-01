@@ -1,4 +1,4 @@
-package com.wzj.blog.myblog.returnUtil
+package com.wzj.blog.myblog.result
 
 import com.google.gson.JsonObject
 import java.util.regex.Pattern
@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 /**
  * 返回数据 封装类
  */
-object GetResultData {
+object Result {
     var json: JsonObject = JsonObject()
 
     fun success200(data: HashMap<String, Any?>, msg: String?): String {
@@ -44,6 +44,22 @@ object GetResultData {
          json.addProperty("msg",msg)
          return log(json.toString())
     }
+
+     fun failure(code:String?,data: HashMap<String, Any?>, msg: String?): String {
+         json =JsonObject()
+         json.addProperty("code",code)
+         json.addProperty("msg",msg)
+         return log(json.toString())
+    }
+
+     fun failure(code:String?, msg: String?): String {
+         json =JsonObject()
+         json.addProperty("code",code)
+         json.addProperty("msg",msg)
+         return log(json.toString())
+    }
+
+
 
     fun failure300(data:String?,msg: String?): String {
         json =JsonObject()
