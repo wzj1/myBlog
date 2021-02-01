@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Mapper
 @Repository
-open interface SortsMapper {
+ interface SortsMapper {
 
     @Insert("insert into ${SqlUtil.Sorts_Table}(SORTID,SORTNAME,SORTALIAS,SORTDESCRIPTION,PARENTSORTID) values(${SqlUtil.seq_sorts},#{sortName},#{sortAlias},#{sortDescription},#{parentSortid})")
     fun addSorts(sortName:String?,sortAlias:String?,sortDescription:String?,parentSortid:Int):Int

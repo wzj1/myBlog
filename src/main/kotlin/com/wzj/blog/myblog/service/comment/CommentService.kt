@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select
 import org.apache.ibatis.annotations.Update
 
 
-open interface CommentService {
+ interface CommentService {
 
     // 添加博文数据
     fun addComment(comment: CommentEntity):Int

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
  */
 @Mapper
 @Repository
-open interface ImageMapper{
+ interface ImageMapper{
 
     @Insert("insert into IMAGE_LOB(IMAGE_ID,IMAGE_TYPE,IMAGE_DATA,IMAGE_NAME,IMAGE_SUFFIX,USER_ID,IMAGE_ADDRESS,IMAGE_PATH) values(${SqlUtil.seq_Image_Lob},#{image_type},#{image_data},#{image_name},#{image_suffix},#{user_id},#{image_address},#{image_path})")
     fun insertImage(image: ImageEntity):Int

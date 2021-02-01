@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Mapper
 @Repository
-open interface ArticleLableMapper {
+ interface ArticleLableMapper {
 
     @Insert("insert into ${SqlUtil.Artitle_Lable_Table}(ARTICLE_LABLE_ID,LABEL_ID) values(#{articleid},#{labelId})")
     fun addArtitleLable(articleid:Int,labelId: Int):Int

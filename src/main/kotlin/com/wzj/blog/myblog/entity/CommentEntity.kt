@@ -1,13 +1,21 @@
 package com.wzj.blog.myblog.entity
 
-class CommentEntity {
+import com.google.gson.annotations.Expose
 
+class CommentEntity {
+    @Expose
     var commentid:Int = 0           //ID 主键
+    @Expose
     var userid:Int = 0              //发表用户ID
+    @Expose
     var articleid:Int = 0           //评论博文ID
+    @Expose
     var commentLikeCount:Int=0           //点赞数
+    @Expose
     var commentDate:String?=null            //评论日期时间
+    @Expose
     var parentCommentid:Int = 0         //父评论ID
+    @Expose
     var commentContent:String?=null         //评论内容
 
 

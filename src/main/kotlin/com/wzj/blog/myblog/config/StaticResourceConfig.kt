@@ -35,8 +35,8 @@ open class StaticResourceConfig : HandlerInterceptor {
             return false
         }
 
-        if (request.requestURI!="login") {
-            if (request.session.getAttribute(Constant.USER_ID).toString().isNullOrBlank()){
+        if (request.requestURI!="/login") {
+            if (request.session.getAttribute(Constant.USER_ID)!=null){
                 getResponse("登录状态失效，请重新登录", response)
                 return false
             }
@@ -59,8 +59,7 @@ open class StaticResourceConfig : HandlerInterceptor {
       fun getResponse(result: String, response: HttpServletResponse) {
         response.characterEncoding = "UTF-8"
         response.contentType = "application/json; charset=utf-8"
-        var out: PrintWriter? = null
-        out = response.writer
+        var out = response.writer
         out.write(Result.failure(Constant.ERROR_CLEAR,result))
         out.flush()
         out.close()

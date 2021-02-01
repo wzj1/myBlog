@@ -28,6 +28,7 @@ class UserFriendsController {
      *添加好友
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/addFriends"])
     fun add(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<UserFriendsEntity>(UserFriendsEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -56,6 +57,7 @@ class UserFriendsController {
      *修改好友 状态 以及 好友备注
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/upFriends"])
     fun update(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<UserFriendsEntity>(UserFriendsEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -91,6 +93,7 @@ class UserFriendsController {
      *修改好友 状态 以及 好友备注
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/findFriends"])
     fun findFriends(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<UserFriendsEntity>(UserFriendsEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -112,29 +115,29 @@ class UserFriendsController {
      * @param friendsInfo json  必传 好友ID 用户ID
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/dlFriends"])
-    fun deleteFriends(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
-        if (CheckReceivedDataUtil.JsonToClass<UserFriendsEntity>(UserFriendsEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+    fun deleteFriends(@ModelAttribute("data") data: String?,request : HttpServletRequest):String {
+        if (CheckReceivedDataUtil.JsonToClass<UserFriendsEntity>(UserFriendsEntity::class.java, data) == null) return Result.failure300("格式错误!!!")
         val friendsEntity = CheckReceivedDataUtil.JsonToClass<UserFriendsEntity>(UserFriendsEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (friendsEntity==null)  return Result.failure300("用户不存在!")
+        val sessionUserId = SeesionUtil.getSessionUserId(request)
+                ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
+        if (friendsEntity == null) return Result.failure300("用户不存在!")
 
-        if (friendsEntity.userFriendsId<=0) return Result.failure300("好友ID不能为空!!!")
-        if (friendsEntity.userId<=0) return Result.failure300("用户ID不能为空!!!")
+        if (friendsEntity.userFriendsId <= 0) return Result.failure300("好友ID不能为空!!!")
+        if (friendsEntity.userId <= 0) return Result.failure300("用户ID不能为空!!!")
         val mlist = mainService.userFriendsService.queryFriendsByIdAndUserId(friendsEntity.userId, friendsEntity.userFriendsId)
-        if (mlist.size<=0){
+        if (mlist.size <= 0) {
             return Result.failure300("删除失败,无此好友!!")
         }
         val deleteFriendsList = mainService.userFriendsService.deleteFriendsById(friendsEntity.userId, friendsEntity.userFriendsId)
-        if (deleteFriendsList<=0){
+        if (deleteFriendsList <= 0) {
             return Result.failure300("删除失败")
         }
         return Result.success200("删除成功好友成功!!!")
+
+
     }
-
-
-
-
 
 
 

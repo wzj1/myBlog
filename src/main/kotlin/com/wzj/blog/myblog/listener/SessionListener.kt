@@ -51,10 +51,14 @@ open class SessionListener : EventListener, HttpSessionListener, HttpSessionAttr
                     logger.info("---sessionCreated----")
                     val application = session.servletContext
                     // 在application范围由一个HashSet集保存所有的session
-                    var sessions = application.getAttribute(Constant.USER_ID) as HashSet<Any?>
+                    var sessions = HashSet<Any?>()
+                    val attr= application.getAttribute(Constant.USER_ID)
+                    if (attr!=null) {
+                        sessions = attr as HashSet<Any?>
+                    }
                     if (sessions == null) {
                         sessions = HashSet<Any?>()
-                        application.setAttribute(Constant.SESSION_ID, sessions)
+                        application.setAttribute(Constant.USER_ID, sessions)
                     }
                     // 新创建的session均添加到HashSet集中
                     sessions.add(session)
@@ -71,7 +75,7 @@ open class SessionListener : EventListener, HttpSessionListener, HttpSessionAttr
                     println(session.creationTime)
                     println(session.lastAccessedTime)
                     //判断 session 中userId 是否失效
-                    if (userId == "user_id") {
+                    if (userId == Constant.USER_ID) {
                         //获取session中用户ID
                         val userId = session.getValue(Constant.USER_ID).toString()
                         //判断userId 是否为空 不为空则修改当前用户登录状态为离线状态
@@ -83,7 +87,7 @@ open class SessionListener : EventListener, HttpSessionListener, HttpSessionAttr
                     val application = session.servletContext
 
                     if (application!=null) {
-                        val sessions = application.getAttribute("sessions") as HashSet<*>
+                        val sessions = application.getAttribute(Constant.USER_ID) as HashSet<*>
                         // 销毁的session均从HashSet集中移除
                         sessions.remove(session)
                     }

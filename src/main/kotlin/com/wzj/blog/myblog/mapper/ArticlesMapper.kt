@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Mapper
 @Repository
-open interface ArticlesMapper {
+ interface ArticlesMapper {
     @Update("update  ${SqlUtil.Articles_Table} set ARTICLEVIEWS=#{view} where ARTICLEID=#{articlesId}")
     fun insertViews(articlesId: Int,view:Int):Int
 

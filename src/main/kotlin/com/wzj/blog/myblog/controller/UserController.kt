@@ -37,6 +37,7 @@ open class UserController {
      * 注册 用户
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/registered"])
     fun registered(@RequestParam(value="file",required=false) file: MultipartFile,@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
 
@@ -92,6 +93,7 @@ open class UserController {
      * @param userName 用户名
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/findUserName"])
     fun findUserName(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
 
@@ -113,6 +115,7 @@ open class UserController {
      * @param userId 用户名ID
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/findUserId"])
     fun findUserId(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
 
@@ -134,6 +137,7 @@ open class UserController {
      * @param userInfo 用户名修改信息  JSON
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/upUserInfo"])
     fun updateUserInfo(@RequestParam(value="file",required=false) file: MultipartFile,@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
 
@@ -235,6 +239,7 @@ open class UserController {
      * @param userName 用户名删除
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/dlUserInfo"])
     fun deleteUserInfo(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -275,6 +280,7 @@ open class UserController {
      * @param userInfo 用户名修改信息  JSON
      */
     @ResponseBody
+    @CrossOrigin
 //    @RequestMapping("/updatePwd")
     @PostMapping(value = ["/upPwd"])
     fun updatePwd(@RequestParam(value="file",required=false) file: MultipartFile,@ModelAttribute("data") data: String?,request : HttpServletRequest):String{

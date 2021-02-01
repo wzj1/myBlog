@@ -132,7 +132,7 @@ open class UploadImageUtil {
         //文件名
         ImageFileName = upFileName.substring(0, upFileName.lastIndexOf("."))
         //文件后缀
-        ImageFileSuffix = fileF?.substring(fileF.lastIndexOf(".") + 1, fileF.length)
+        ImageFileSuffix = fileF.substring(fileF.lastIndexOf(".") + 1, fileF.length)
         //文件时间
         ImageFileTime = fileTime
 

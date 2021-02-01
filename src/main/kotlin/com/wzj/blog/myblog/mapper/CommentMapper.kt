@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Mapper
 @Repository
-open interface CommentMapper {
+ interface CommentMapper {
 
     // 添加博文数据
     @Insert("insert into ${SqlUtil.Comments_Table}(USERID,ARTICLEID,COMMENTLIKECOUNT,COMMENTDATE,PARENTCOMMENTID,COMMENTCONTENT,COMMENTID) values(#{userid},#{articleid},#{userid},#{commentLikeCount},#{commentDate},${SqlUtil.seq_Comments},#{commentContent},${SqlUtil.seq_Comments})")
@@ -22,10 +22,10 @@ open interface CommentMapper {
     fun upComment(comment: CommentEntity):Int
 
     @Select("select COMMENTID,USERID,ARTICLEID,COMMENTLIKECOUNT,COMMENTDATE,PARENTCOMMENTID,COMMENTCONTENT from  ${SqlUtil.Comments_Table} where COMMENTID=#{commentid}")
-    fun queryById(commentid: Int): ArticlesEntity
+    fun queryById(commentid: Int): CommentEntity
 
     @Select("select COMMENTID,USERID,ARTICLEID,COMMENTLIKECOUNT,COMMENTDATE,PARENTCOMMENTID,COMMENTCONTENT from  ${SqlUtil.Comments_Table}")
-    fun queryforList():MutableList<ArticlesEntity>
+    fun queryforList():MutableList<CommentEntity>
 
     @Delete("delete ${SqlUtil.Comments_Table} where COMMENTID=#{commentid}")
     fun deleteById(commentid: Int):Int

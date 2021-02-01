@@ -91,7 +91,7 @@ open class CommentController {
     }
 
 
-    @RequestMapping("/findComment")
+    @RequestMapping("/findCommentList")
     @CrossOrigin
     @ResponseBody
     fun findComment():String{

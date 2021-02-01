@@ -67,6 +67,7 @@ class UpImageController {
      * 通过ImageId 查找图片
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/findImg"])
     fun findImg(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
 
@@ -91,6 +92,7 @@ class UpImageController {
      * @param imageData 修改的参数 json格式
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/updateImg"])
     fun updateImg(@RequestParam(value = "file", required = false) file: MultipartFile, @ModelAttribute("data") data: String?,request : HttpServletRequest): String {
 
@@ -123,6 +125,7 @@ class UpImageController {
      * 查询所有图片资源
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/findImgAll"])
     fun findImgAll():String{
 
@@ -139,6 +142,7 @@ class UpImageController {
      * @param userid 用户ID
      */
     @ResponseBody
+    @CrossOrigin
     @RequestMapping("/findUserImg")
     fun findUserImg( @ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -161,6 +165,7 @@ class UpImageController {
      * @param imageId 图片ID
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/deleteImg"])
     fun deleteImg( @ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -182,6 +187,7 @@ class UpImageController {
      * @param userid 用户ID
      */
     @ResponseBody
+    @CrossOrigin
     @PostMapping(value = ["/deleteUserImg"])
     fun deleteUserImg( @ModelAttribute("data") data: String?,request : HttpServletRequest):String{
         if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")

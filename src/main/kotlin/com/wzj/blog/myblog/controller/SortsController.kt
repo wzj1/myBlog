@@ -65,7 +65,7 @@ open class SortsController {
         return Result.success200(Gson().toJson(sortid),"查询成功")
     }
 
-    @RequestMapping("/deleteLanels")
+    @RequestMapping("/deleteSortid")
     @CrossOrigin
     @ResponseBody
     fun deleteLanels(@ModelAttribute("data") data: String?, request : HttpServletRequest):String{
@@ -99,7 +99,7 @@ open class SortsController {
     }
 
 
-    @RequestMapping("/upLanels")
+    @RequestMapping("/upSortsls")
     @CrossOrigin
     @ResponseBody
     fun upLanels(@ModelAttribute("data") data: String?, request : HttpServletRequest):String{

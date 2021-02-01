@@ -2,6 +2,7 @@ package com.wzj.blog.myblog.controller
 
 import com.google.gson.Gson
 import com.wzj.blog.myblog.config.Constant
+import com.wzj.blog.myblog.entity.ResultData2
 import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.result.Result
 import com.wzj.blog.myblog.service.MainService
@@ -11,6 +12,10 @@ import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters
+import org.springframework.context.annotation.Bean
+import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.http.converter.json.GsonHttpMessageConverter
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
@@ -19,6 +24,8 @@ import javax.servlet.http.HttpServletRequest
  * 登录 修改状态 忘记密码
  */
 @Controller
+@CrossOrigin
+
 @Slf4j
 open class LoginController {
 
@@ -31,12 +38,12 @@ open class LoginController {
      *
      */
 
-    @RequestMapping("/login")
-    @CrossOrigin
+//    @RequestMapping("/login",method = [RequestMethod.POST],produces = ["application/json;charset=UTF-8"])
+    @PostMapping("/login")
     @ResponseBody
-    fun login(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
-        if (CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java,data)==null) return Result.failure300("格式错误!!!")
-        val login = CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java, data)
+    fun login(@RequestBody data: ResultData2?, request : HttpServletRequest):String{
+        if (CheckReceivedDataUtil.JsonToClass(UserInfo::class.java,data?.data)==null) return Result.failure300("格式错误!!!")
+        val login = CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java, data?.data)
 
         logger.info(login.toString())
         if (login?.userName.isNullOrBlank())return Result.failure300("用户名不能为空!!!")
@@ -64,7 +71,7 @@ open class LoginController {
      * 修改登录状态
      */
     @ResponseBody
-    @RequestMapping(value = ["/updateLogin"])
+    @RequestMapping(value = ["/updateLogin"],method = [RequestMethod.POST])
     fun updateLogin(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
 
         if (CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java,data)==null) return Result.failure300("格式错误!!!")
@@ -83,7 +90,6 @@ open class LoginController {
         return Result.success200("修改成功!!!")
 
     }
-
 
 
 }

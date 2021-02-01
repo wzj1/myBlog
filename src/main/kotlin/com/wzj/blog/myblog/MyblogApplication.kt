@@ -19,3 +19,4 @@ fun main(args: Array<String>) {
     runApplication<MyblogApplication>(*args)
 }
 
+

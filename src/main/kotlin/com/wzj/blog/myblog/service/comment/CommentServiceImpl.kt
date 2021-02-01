@@ -17,9 +17,9 @@ open class CommentServiceImpl :CommentService {
 
     override fun upComment(comment: CommentEntity): Int =commentMapper.upComment(comment)
 
-    override fun queryById(commentid: Int): ArticlesEntity =commentMapper.queryById(commentid)
+    override fun queryById(commentid: Int): CommentEntity =commentMapper.queryById(commentid)
 
-    override fun queryforList(): MutableList<ArticlesEntity> =commentMapper.queryforList()
+    override fun queryforList(): MutableList<CommentEntity> =commentMapper.queryforList()
 
     override fun deleteById(commentid: Int): Int =commentMapper.deleteById(commentid)
 }

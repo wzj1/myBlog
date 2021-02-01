@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Mapper
 @Repository
-open interface UserMapper {
+ interface UserMapper {
     /**
      * 注册用户
      */

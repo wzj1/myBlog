@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Mapper
 @Repository
-open interface ArtitleSortMapper {
+ interface ArtitleSortMapper {
 
 
     @Insert("insert into ${SqlUtil.ArtitleSort_Table}(ARTICLE_ID,SORT_ID) values(#{articleid},#{sortId})")
