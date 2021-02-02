@@ -70,16 +70,16 @@ open class ApplicationConfig : WebMvcConfigurer {
         return srb
     }
 
-
-    @Bean
-    fun HttpMessageConverterscustomConverters(): HttpMessageConverters {
-        val messageConverters:Collection<HttpMessageConverter<*>>  = arrayListOf();
-
-        val  gsonHttpMessageConverter =  GsonHttpMessageConverter()
-        messageConverters.contains(gsonHttpMessageConverter)
-
-        return  HttpMessageConverters(true,messageConverters)
-
-    }
+//
+//    @Bean
+//    fun HttpMessageConverterscustomConverters(): HttpMessageConverters {
+//        val messageConverters:Collection<HttpMessageConverter<*>>  = arrayListOf();
+//
+//        val  gsonHttpMessageConverter =  GsonHttpMessageConverter()
+//        messageConverters.contains(gsonHttpMessageConverter)
+//        messageConverters.contains(responseBodyConverter())
+//        return  HttpMessageConverters(true,messageConverters)
+//
+//    }
 
 }

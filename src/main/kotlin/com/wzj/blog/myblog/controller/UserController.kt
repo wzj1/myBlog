@@ -124,7 +124,7 @@ open class UserController {
         val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
 
         if (userInfo?.userId!!<=0) return Result.failure300("用户名ID不能为空!")
-        val queryUserByName= findByName(userInfo?.userId.toString(), 1)
+        val queryUserByName= findByName(userInfo.userId.toString(), 1)
         if (queryUserByName.size<=0){
               return Result.success200("该用户暂未注册!!")
         }

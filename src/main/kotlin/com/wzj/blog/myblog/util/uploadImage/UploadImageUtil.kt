@@ -80,7 +80,7 @@ open class UploadImageUtil {
      */
     fun uploadPicture(file: MultipartFile,path:String?,fileName:String):String{
         var path1 = path
-        if (path1.isNullOrBlank()) path1= filePath else path
+        if (path1.isNullOrBlank()) path1= filePath else path!!
         return UploadFile(file, path1,false, fileName)
     }
 
@@ -104,9 +104,9 @@ open class UploadImageUtil {
 
         //文件后缀
         val fileF = fileName.substring(fileName.lastIndexOf("."), fileName.length)
-        var fileTime = ""
-        var upFileName=""
-        var urlpath =""
+        var fileTime:String = ""
+        var upFileName:String=""
+        var urlpath:String?=""
         if (isFileName){
             upFileName =fileName
         }else {

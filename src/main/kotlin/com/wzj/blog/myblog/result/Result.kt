@@ -1,6 +1,8 @@
 package com.wzj.blog.myblog.result
 
 import com.google.gson.JsonObject
+import net.sf.json.JSON
+import net.sf.json.JSONObject
 import java.util.regex.Pattern
 
 /**
@@ -21,6 +23,13 @@ object Result {
         json.addProperty("data",data)
         json.addProperty("msg",msg)
         return log(json.toString())
+    }
+    fun success200ToJSON(data:JSONObject?,msg: String?): JSONObject {
+       val  json =JSONObject()
+        json.put("code","200")
+        json.put("data",data.toString())
+        json.put("msg",msg)
+        return logs(json)
     }
 
     fun success200(msg: String?): String {
@@ -76,6 +85,13 @@ object Result {
         return log(json.toString())
     }
 
+    fun failure300ToJSON(msg: String?): JSONObject {
+       val json =JSONObject()
+        json.put("code","300")
+        json.put("msg",msg)
+        return logs(json)
+    }
+
     fun failure300(): String {
         json =JsonObject()
         json.addProperty("code","300")
@@ -88,11 +104,24 @@ object Result {
         return repalceAll("\\\\",json)
     }
 
+    fun  logs(json: JSONObject):JSONObject{
+        println("原json:${json.toString()}")
+        println("json:${repalceAll("\\\\",json.toString())}")
+        return repalceAll1("\\\\",json.toString())
+    }
+
+
     fun  log(tag: String, json: String):String{
         println("$tag:${repalceAll("\\\\",json)}")
         return repalceAll("\\\\",json)
     }
 
+    /**
+     * 去除转义字符
+     */
+    fun repalceAll1(expr: String?, substitute: String?): JSONObject {
+        return  JSONObject.fromObject(Pattern.compile(expr).matcher("\\").replaceAll(substitute))
+    }
     /**
      * 去除转义字符
      */

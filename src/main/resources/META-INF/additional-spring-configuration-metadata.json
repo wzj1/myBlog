@@ -4,5 +4,10 @@
       "name": "allow-bean-definition-overriding",
       "type": "java.lang.String",
       "description": "Description for allow-bean-definition-overriding."
-  }
-] }
+    },
+    {
+      "name": "server.encoding.charset",
+      "type": "java.lang.String",
+      "description": "Description for server.encoding.charset."
+    }
+  ] }

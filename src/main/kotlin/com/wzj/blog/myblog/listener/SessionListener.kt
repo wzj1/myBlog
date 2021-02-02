@@ -77,7 +77,7 @@ open class SessionListener : EventListener, HttpSessionListener, HttpSessionAttr
                     //判断 session 中userId 是否失效
                     if (userId == Constant.USER_ID) {
                         //获取session中用户ID
-                        val userId = session.getValue(Constant.USER_ID).toString()
+                        val userId = session.getAttribute(Constant.USER_ID).toString()
                         //判断userId 是否为空 不为空则修改当前用户登录状态为离线状态
                         if (!userId.isNullOrBlank()) {
                             userFriendsService.updateFriendsStatus(userId.toInt(), 3)

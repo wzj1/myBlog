@@ -1,14 +1,15 @@
 package com.wzj.blog.myblog.util
 
-import com.google.gson.*
+import com.google.gson.JsonParseException
+import com.google.gson.JsonSyntaxException
 import com.wzj.blog.myblog.entity.ResultData
 import com.wzj.blog.myblog.result.Result
 import lombok.extern.slf4j.Slf4j
+import net.sf.json.JSONObject
+import net.sf.json.JsonConfig
 import org.apache.http.util.TextUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.reflect.Type
-import java.util.*
 
 
 @Slf4j
@@ -32,7 +33,7 @@ object CheckReceivedDataUtil {
         return if (TextUtils.isEmpty(json)) {
             false
         } else try {
-            JsonParser().parse(json)
+            JSONObject.fromObject(json)
             true
         } catch (e: JsonSyntaxException) {
             false
@@ -46,10 +47,8 @@ object CheckReceivedDataUtil {
         if (!isBadJson(json)) return null
         try {
             logger.info(json)
-            val gsonBuilder = GsonBuilder()
-            gsonBuilder.registerTypeAdapter(ClassData::class.java, ClassDataSerializer())
-            val gson = gsonBuilder.create()
-            val tc = gson.fromJson(json, t::class.java)
+
+            val tc = JSONObject.toBean(JSONObject.fromObject(json), t::class.java)
             logger.info("JSON 映射成功")
             return tc as T
 
@@ -61,14 +60,52 @@ object CheckReceivedDataUtil {
 
     }
 
-    internal class ClassData(var jsonString: String, var classType: Class<*>)
+    inline fun <reified T> JsonToClass1(json: JSONObject?): T? {
+        if (!isBadJson(json.toString())) return null
+        try {
+            logger.info(json.toString())
+            val jsonConfig = JsonConfig()
+            jsonConfig.rootClass = T::class.java
+            val jt = JSONObject.toBean(json, jsonConfig)
+            logger.info("JSON 映射成功")
+            logger.info("JSON ${jt.toString()}")
+            return jt as T
 
-    internal class ClassDataSerializer : JsonSerializer<ClassData?> {
-
-        override fun serialize(src: ClassData?, p1: Type?, p2: JsonSerializationContext?): JsonElement {
-            return JsonPrimitive(src?.jsonString)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logger.error(e.message)
+            return null
         }
+
     }
+
+    inline fun <reified T> JsonToClass1(json: String?): T? {
+        if (!isBadJson(json)) return null
+        try {
+            logger.info(json)
+            val jsonConfig = JsonConfig()
+            jsonConfig.rootClass = T::class.java
+            val jt = JSONObject.toBean(JSONObject.fromObject(json), jsonConfig)
+            logger.info("JSON 映射成功")
+            logger.info("JSON ${jt.toString()}")
+            return jt as T
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logger.error(e.message)
+            return null
+        }
+
+    }
+//
+//    internal class ClassData(var jsonString: String, var classType: Class<*>)
+//
+//    internal class ClassDataSerializer : JsonSerializer<ClassData?> {
+//
+//        override fun serialize(src: ClassData?, p1: Type?, p2: JsonSerializationContext?): JsonElement {
+//            return JsonPrimitive(src?.jsonString)
+//        }
+//    }
 //
 //    @JvmStatic
 //    fun main(args: Array<String>) {

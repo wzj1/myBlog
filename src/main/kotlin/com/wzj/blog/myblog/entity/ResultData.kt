@@ -6,6 +6,12 @@ import com.sun.xml.internal.ws.developer.Serialization
 
 
 open class ResultData<T>{
-    @Expose
     var data: T? = null
+
+    override fun toString(): String {
+        val sb = StringBuffer()
+        sb.append("开始 \r\n")
+        sb.append("data :  ${data.toString()} \r\n")
+        return sb.toString()
+    }
 }
