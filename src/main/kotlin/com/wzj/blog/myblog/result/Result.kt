@@ -31,6 +31,20 @@ object Result {
         json.put("msg",msg)
         return logs(json)
     }
+    fun success200ToJSON(msg: String?): JSONObject {
+       val  json =JSONObject()
+        json.put("code","200")
+        json.put("data","")
+        json.put("msg",msg)
+        return logs(json)
+    }
+ fun success200ToJSON(data:String?,msg: String?): JSONObject {
+       val  json =JSONObject()
+        json.put("code","200")
+        json.put("data",data)
+        json.put("msg",msg)
+        return logs(json)
+    }
 
     fun success200(msg: String?): String {
         json =JsonObject()
@@ -81,6 +95,7 @@ object Result {
     fun failure300(msg: String?): String {
         json =JsonObject()
         json.addProperty("code","300")
+        json.addProperty("data","")
         json.addProperty("msg",msg)
         return log(json.toString())
     }
@@ -88,6 +103,15 @@ object Result {
     fun failure300ToJSON(msg: String?): JSONObject {
        val json =JSONObject()
         json.put("code","300")
+        json.put("data","")
+        json.put("msg",msg)
+        return logs(json)
+    }
+
+    fun failure300ToJSON(code: String?,msg: String?): JSONObject {
+       val json =JSONObject()
+        json.put("code",code)
+        json.put("data","")
         json.put("msg",msg)
         return logs(json)
     }
@@ -95,6 +119,8 @@ object Result {
     fun failure300(): String {
         json =JsonObject()
         json.addProperty("code","300")
+        json.addProperty("data","")
+
         json.addProperty("msg","失败")
         return log(json.toString())
     }

@@ -1,6 +1,7 @@
 package com.wzj.blog.myblog.controller
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.wzj.blog.myblog.config.Constant
 import com.wzj.blog.myblog.entity.ImageEntity
 import com.wzj.blog.myblog.entity.LoginEntity
@@ -14,6 +15,10 @@ import com.wzj.blog.myblog.util.CheckReceivedDataUtil
 import com.wzj.blog.myblog.util.SeesionUtil
 import com.wzj.blog.myblog.util.timeUtil.TimeUtil
 import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil
+import lombok.extern.slf4j.Slf4j
+import net.sf.json.JSONObject
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -27,11 +32,12 @@ import javax.servlet.http.HttpServletResponse
  */
 @Controller
 @RequestMapping("/user")
+@Slf4j
 open class UserController {
 
     @Autowired
     lateinit var mainService: MainService
-
+    var logger: Logger = LoggerFactory.getLogger(UserController::class.java)
 
     /**
      * 注册 用户
@@ -281,43 +287,48 @@ open class UserController {
      */
     @ResponseBody
     @CrossOrigin
-//    @RequestMapping("/updatePwd")
     @PostMapping(value = ["/upPwd"])
-    fun updatePwd(@RequestParam(value="file",required=false) file: MultipartFile,@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
-        if (CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java,data)==null) return Result.failure300("格式错误!!!")
-        val userInfo = CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (userInfo==null)  return Result.failure300("用户不存在!")
+    fun updatePwd(@RequestBody data: String?, request : HttpServletRequest): JSONObject {
+        logger.info("这是原数据 \r\n  $data  ")
+        val resultData = CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)
+        if (resultData === null )  return Result.failure300ToJSON("参数缺失 data 参数")
+        if (resultData.data ===null ) return Result.failure300ToJSON("参数缺失 data 参数")
+        logger.info("这是原data数据 \r\n  $resultData.data  ")
+        val userInfo = Gson().fromJson<UserInfo>(resultData.data,object :TypeToken<UserInfo>(){}.type)
+        logger.info("这是原data数据 \r\n  ${userInfo.toString()}  ")
+        try {
+            SeesionUtil.getSessionUserId(request) ?: return Result.failure300ToJSON(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
+        } catch (e: Exception) {
+            logger.error("获取Seesion 失败",e)
+        }
+        if (userInfo==null)  return Result.failure300ToJSON("用户不存在!")
 
-        var type:Int = 0
         if (userInfo.userName.isNullOrBlank()){
             if (userInfo.userId==0){
-                return Result.failure300("用户名或用户名ID不能为空!")
-            }else{
-                type=1
+                return Result.failure300ToJSON("用户名或用户名ID不能为空!")
             }
         }
 
-        if (userInfo.userPwd.isNullOrBlank()) return Result.failure300("用户名密码不能为空!")
-        if (userInfo.userPwd?.length!!<6)    return Result.failure300("用户名密码不能少于6位!")
-        if (userInfo.newUserPwd.isNullOrBlank()) return Result.failure300("新用户名密码不能为空!")
-        if (userInfo.newUserPwd?.length!!<6)    return Result.failure300("新用户名密码不能少于6位!")
-       val mlist  = when(type){
+        if (userInfo.userPwd.isNullOrBlank()) return Result.failure300ToJSON("用户名密码不能为空!")
+        if (userInfo.userPwd?.length!!<6)    return Result.failure300ToJSON("用户名密码不能少于6位!")
+        if (userInfo.newUserPwd.isNullOrBlank()) return Result.failure300ToJSON("新用户名密码不能为空!")
+        if (userInfo.newUserPwd?.length!!<6)    return Result.failure300ToJSON("新用户名密码不能少于6位!")
+       val mlist  = when(userInfo.userPwdType){
            0 -> findByName(userInfo.userName!!, 0)
            1 -> findByName(userInfo.userId.toString(), 1)
            else-> arrayListOf<UserInfo>()
         }
-
-        if (mlist.size<=0) return Result.failure300("修改失败,原用户名或原用户ID错误!!")
+        logger.info("查询的用户信息 \r\n  $mlist  ")
+        if (mlist.size<=0) return Result.failure300ToJSON("修改失败,原用户名或原用户ID错误!!")
         //验证密码是否正确
         if (userInfo.userPwdType==0) {
-            if (mlist[0].userPwd!=userInfo.userPwd) return Result.failure300("原密码验证失败!")
+            if (mlist[0].userPwd!=userInfo.userPwd) return Result.failure300ToJSON("原密码验证失败!")
         }
 
-        return  when(type){
-            0 -> if (mainService.userService.updateUserPwdById(userInfo.userId, userInfo.newUserPwd!!) > 0) return Result.success200("修改密码成功!") else return Result.failure300("修改密码失败!")
-            1 -> if (mainService.userService.updateUserPwdByName(userInfo.userName!!, userInfo.newUserPwd!!) > 0) return Result.success200("修改密码成功!") else return Result.failure300("修改密码失败!")
-             else ->Result.failure300("修改密码失败!")
+        return  when(userInfo.userPwdType){
+            0 -> if (mainService.userService.updateUserPwdByName(userInfo.userName!!, userInfo.newUserPwd!!) > 0) return Result.success200ToJSON("修改密码成功!") else return Result.failure300ToJSON("修改密码失败!")
+            1 ->  if (mainService.userService.updateUserPwdById(userInfo.userId, userInfo.newUserPwd!!) > 0) return Result.success200ToJSON("修改密码成功!") else return Result.failure300ToJSON("修改密码失败!")
+             else ->Result.failure300ToJSON("修改密码失败!")
          }
     }
 
@@ -342,6 +353,40 @@ open class UserController {
 
     }
 
+    /**
+     * 获取短信验证码
+     * @param userId 用户ID删除
+     * @param userName 用户名删除
+     */
+    @ResponseBody
+    @CrossOrigin
+    @PostMapping(value = ["/getVerifyCode"])
+    fun getVerifyCode(@ModelAttribute("data") data: String?,request : HttpServletRequest):JSONObject{
+        logger.info("获取短信验证码   \r\n   $data")
+        if (data!=null){
+            val resultData = CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)
 
+            if (resultData === null )  return Result.failure300ToJSON("参数缺失 data 参数")
+            if (resultData.data ===null ) return Result.failure300ToJSON("参数缺失 data 参数")
+            logger.info("这是原data数据 \r\n  $resultData.data  ")
+
+            val userInfo = Gson().fromJson<UserInfo>(resultData.data,object :TypeToken<UserInfo>(){}.type)
+            logger.info("这是原data数据 \r\n  ${userInfo.toString()}  ")
+
+            if (userInfo.userPhone?.length!=11){
+                val map = hashMapOf<String,Any?>()
+                map["verify_code"] ="123456"
+                return Result.success200ToJSON(Gson().toJson(map),"验证码发送成功")
+            }
+
+           return Result.failure300ToJSON("获取验证码失败,手机号格式错误!!!")
+
+        }
+
+        return Result.failure300ToJSON("获取验证码失败")
+
+
+
+    }
 
 }

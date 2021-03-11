@@ -1,7 +1,10 @@
 package com.wzj.blog.myblog.util
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import com.wzj.blog.myblog.entity.ResultData
 import com.wzj.blog.myblog.result.Result
 import lombok.extern.slf4j.Slf4j
@@ -15,7 +18,6 @@ import org.slf4j.LoggerFactory
 @Slf4j
 object CheckReceivedDataUtil {
     var logger: Logger = LoggerFactory.getLogger(CheckReceivedDataUtil::class.java)
-
 
     fun IsCheckReceivedDataNull(data: ResultData<String>?): String? {
         if (data == null) return Result.failure300("参数异常")
@@ -48,7 +50,10 @@ object CheckReceivedDataUtil {
         try {
             logger.info(json)
 
-            val tc = JSONObject.toBean(JSONObject.fromObject(json), t::class.java)
+            val asJsonObject = JsonObject().getAsJsonObject(json)
+
+//            val tc = Gson().fromJson<T>(json, object :TypeToken<t::class.java>() {}.getType())
+            val tc = Gson().fromJson(asJsonObject, t::class.java)
             logger.info("JSON 映射成功")
             return tc as T
 
