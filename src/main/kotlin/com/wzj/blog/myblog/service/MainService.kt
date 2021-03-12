@@ -1,8 +1,8 @@
 package com.wzj.blog.myblog.service
 
-import com.wzj.blog.myblog.service.ImageService.ImageService
-import com.wzj.blog.myblog.service.UserFriends.UserFriendsService
-import com.wzj.blog.myblog.service.UserService.UserService
+import com.wzj.blog.myblog.service.imageService.ImageService
+import com.wzj.blog.myblog.service.userFriends.UserFriendsService
+import com.wzj.blog.myblog.service.userService.UserService
 import com.wzj.blog.myblog.service.articles.ArticlesService
 import com.wzj.blog.myblog.service.setting.aticleLable.ArticleLableService
 import com.wzj.blog.myblog.service.setting.atitleSort.ArtitleSortService

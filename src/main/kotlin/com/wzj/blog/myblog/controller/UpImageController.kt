@@ -3,11 +3,7 @@ package com.wzj.blog.myblog.controller
 import com.google.gson.Gson
 import com.wzj.blog.myblog.config.Constant
 import com.wzj.blog.myblog.entity.ImageEntity
-import com.wzj.blog.myblog.entity.LoginEntity
-import com.wzj.blog.myblog.entity.ResultData
-import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.result.Result
-import com.wzj.blog.myblog.service.ImageService.ImageService
 import com.wzj.blog.myblog.service.MainService
 import com.wzj.blog.myblog.util.CheckReceivedDataUtil
 import com.wzj.blog.myblog.util.SeesionUtil
@@ -17,7 +13,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 /**
  * 上传图片

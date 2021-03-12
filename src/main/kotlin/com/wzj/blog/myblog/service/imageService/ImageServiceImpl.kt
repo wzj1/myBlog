@@ -1,4 +1,4 @@
-package com.wzj.blog.myblog.service.ImageService
+package com.wzj.blog.myblog.service.imageService
 
 import com.wzj.blog.myblog.entity.ImageEntity
 import com.wzj.blog.myblog.mapper.ImageMapper

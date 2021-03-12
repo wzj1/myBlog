@@ -1,4 +1,4 @@
-package com.wzj.blog.myblog.service.UserService
+package com.wzj.blog.myblog.service.userService
 
 import com.wzj.blog.myblog.entity.LoginEntity
 import com.wzj.blog.myblog.entity.UserInfo
@@ -18,7 +18,7 @@ interface  UserService {
     fun updateUserByName(userName: UserInfo):Int
 
     fun queryUserById(userId: Int): UserInfo
-
+    fun queryUserByPhone(phone: String):UserInfo
     fun queryUserByName(userName: String):MutableList<UserInfo>
     fun queryUserByLoginName(userName: String):MutableList<LoginEntity>
     fun queryUserLikeByName(userName: String):MutableList<UserInfo>

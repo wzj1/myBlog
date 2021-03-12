@@ -1,4 +1,4 @@
-package com.wzj.blog.myblog.service.UserFriends
+package com.wzj.blog.myblog.service.userFriends
 
 import com.wzj.blog.myblog.entity.UserFriendsEntity
 import com.wzj.blog.myblog.mapper.UserFriendsMapper

@@ -4,15 +4,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wzj.blog.myblog.config.Constant
 import com.wzj.blog.myblog.entity.ImageEntity
-import com.wzj.blog.myblog.entity.LoginEntity
 import com.wzj.blog.myblog.entity.ResultData
 import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.result.Result
-import com.wzj.blog.myblog.service.ImageService.ImageService
 import com.wzj.blog.myblog.service.MainService
-import com.wzj.blog.myblog.service.UserService.UserService
 import com.wzj.blog.myblog.util.CheckReceivedDataUtil
 import com.wzj.blog.myblog.util.SeesionUtil
+import com.wzj.blog.myblog.util.phoneUtils.PhoneUtils
 import com.wzj.blog.myblog.util.timeUtil.TimeUtil
 import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil
 import lombok.extern.slf4j.Slf4j
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 /**
  * 用户信息表
@@ -93,6 +90,60 @@ open class UserController {
         if (insertUser<=0) return Result.failure300("注册失败,请重试!")
         return Result.success200("注册成功!")
     }
+    /**
+     * 手机号注册用户
+     */
+    @ResponseBody
+    @CrossOrigin
+    @PostMapping(value = ["/registeredPhone"])
+    fun registeredPhone(@RequestParam(value="file",required=false) file: MultipartFile,@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
+
+        if (CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java,data)==null) return Result.failure300("格式错误!!!")
+        val userInfo = CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java, data)
+
+        if (userInfo?.userName.isNullOrBlank()) return Result.failure300("用户名不能为空!")
+        if (userInfo?.userPwd.isNullOrBlank()) return Result.failure300("用户名密码不能为空!")
+        if (userInfo?.userPwd?.length!!<6)    return Result.failure300("用户名密码不能少于6位!")
+        //通过用户名查询用户是否存在
+        val findByName = findByName(userInfo.userName!!, 0)
+        //如果存在 则提示用户已注册
+        if (findByName.size>0){
+           return Result.failure300("该用户已注册!!")
+        }
+
+        if (!file.isEmpty) {
+            try {
+                val uploadUtil = UploadImageUtil()
+                val path = uploadUtil.uploadPicture(file, request)
+                val image = ImageEntity()
+                image.image_name = uploadUtil.getFileName()
+                image.image_suffix = uploadUtil.getFileSuffix()
+                image.image_data = uploadUtil.getFileTime()
+                image.image_path = path
+                image.user_id = userInfo.userId
+                image.image_type = 0
+                val insertImage = mainService.imageService.insertImage(image)
+
+                if (insertImage <= 0) {
+                    Result.log("上传失败")
+                }else {
+                    if (!path.isNullOrBlank()) {
+                        //上传头像
+                        userInfo.userProFilePhoto = path
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        //注册时间
+        userInfo.userRegisrAtionTime =TimeUtil.getTime()
+
+        //注册用户
+        val insertUser = mainService.userService.insertUser(userInfo)
+        if (insertUser<=0) return Result.failure300("注册失败,请重试!")
+        return Result.success200("注册成功!")
+    }
 
     /**
      * 通过用户名查询用户
@@ -105,7 +156,7 @@ open class UserController {
 
         if (CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java,data)==null) return Result.failure300("格式错误!!!")
         val userInfo = CheckReceivedDataUtil.JsonToClass<UserInfo>(UserInfo::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
+        SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
 
         if (userInfo?.userName.isNullOrBlank()) return Result.failure300("用户名不能为空!")
         val queryUserByName= findByName(userInfo?.userName!!, 0)
@@ -277,10 +328,6 @@ open class UserController {
         return Result.failure300("删除失败!")
     }
 
-
-
-
-
     /**
      * 修改用户密码
      * @param userInfo 用户名修改信息  JSON
@@ -367,20 +414,23 @@ open class UserController {
             val resultData = CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)
 
             if (resultData === null )  return Result.failure300ToJSON("参数缺失 data 参数")
-            if (resultData.data ===null ) return Result.failure300ToJSON("参数缺失 data 参数")
-            logger.info("这是原data数据 \r\n  $resultData.data  ")
+            if (resultData.data.isNullOrBlank()) return Result.failure300ToJSON("参数缺失 data 参数")
+            logger.info("这是原data数据 \r\n  ${resultData.data}  ")
 
-            val userInfo = Gson().fromJson<UserInfo>(resultData.data,object :TypeToken<UserInfo>(){}.type)
-            logger.info("这是原data数据 \r\n  ${userInfo.toString()}  ")
+            val user = Gson().fromJson<UserInfo>(resultData.data,object :TypeToken<UserInfo>(){}.type)
+            logger.info("这是原data数据 \r\n  ${user.toString()}  ")
 
-            if (userInfo.userPhone?.length!=11){
-                val map = hashMapOf<String,Any?>()
-                map["verify_code"] ="123456"
-                return Result.success200ToJSON(Gson().toJson(map),"验证码发送成功")
-            }
+            val isPhoen =PhoneUtils.isPhoneLegal(user.userPhone)
 
-           return Result.failure300ToJSON("获取验证码失败,手机号格式错误!!!")
+            if (!isPhoen) return Result.failure300ToJSON("手机号格式不正确")
 
+            val userInfo = mainService.userService.queryUserByPhone(user.userPhone!!)
+
+            if (userInfo===null)  return Result.failure300ToJSON("该用户未注册!!!")
+
+            val map = hashMapOf<String,Any?>()
+            map["verify_code"] ="123456"
+            return Result.success200ToJSON(Gson().toJson(map),"验证码发送成功")
         }
 
         return Result.failure300ToJSON("获取验证码失败")

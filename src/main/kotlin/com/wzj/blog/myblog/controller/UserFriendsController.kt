@@ -2,12 +2,9 @@ package com.wzj.blog.myblog.controller
 
 import com.google.gson.Gson
 import com.wzj.blog.myblog.config.Constant
-import com.wzj.blog.myblog.entity.ResultData
 import com.wzj.blog.myblog.entity.UserFriendsEntity
-import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.result.Result
 import com.wzj.blog.myblog.service.MainService
-import com.wzj.blog.myblog.service.UserFriends.UserFriendsService
 import com.wzj.blog.myblog.util.CheckReceivedDataUtil
 import com.wzj.blog.myblog.util.SeesionUtil
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,5 @@
-package com.wzj.blog.myblog.service.UserService
+package com.wzj.blog.myblog.service.userService
 
-import com.wzj.blog.myblog.entity.ImageEntity
 import com.wzj.blog.myblog.entity.LoginEntity
 import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.mapper.UserMapper
@@ -19,6 +18,7 @@ class UserServiceImpl:UserService {
     override fun updateUserByName(userName: UserInfo): Int =userMapper.updateUserByName(userName)
 
     override fun queryUserById(userId: Int): UserInfo =userMapper.queryUserById(userId)
+    override fun queryUserByPhone(phone: String): UserInfo =userMapper.queryUserByPhone(phone)
 
     override fun queryUserByName(userName: String): MutableList<UserInfo> =userMapper.queryUserByName(userName)
     override fun queryUserByLoginName(userName: String): MutableList<LoginEntity> =userMapper.queryUserByLoginName(userName)

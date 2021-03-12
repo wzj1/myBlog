@@ -31,7 +31,13 @@ import org.springframework.stereotype.Repository
     @Select("select * from ${SqlUtil.userInfo_Table} where  USERID=#{userId}")
     fun queryUserById(userId: Int):UserInfo
 
-    @Select("select * from ${SqlUtil.userInfo_Table} where USERNAME like '%#{userName}%'")
+
+   @Select("select * from ${SqlUtil.userInfo_Table} where  userPhone=#{phone}")
+   fun queryUserByPhone(phone: String):UserInfo
+
+
+
+   @Select("select * from ${SqlUtil.userInfo_Table} where USERNAME like '%#{userName}%'")
     fun queryUserLikeByName(userName: String):MutableList<UserInfo>
 
     @Select("select * from ${SqlUtil.userInfo_Table} where USERNAME=#{userName}")
