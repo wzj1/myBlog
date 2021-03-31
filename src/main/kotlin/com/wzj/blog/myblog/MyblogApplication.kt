@@ -5,11 +5,13 @@ import com.wzj.blog.myblog.listener.SessionListener
 import lombok.extern.slf4j.Slf4j
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.boot.web.servlet.MultipartConfigFactory
 import org.springframework.boot.web.servlet.ServletComponentScan
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import java.util.*
+import javax.servlet.MultipartConfigElement
 
 @SpringBootApplication
 @ServletComponentScan
@@ -18,5 +20,3 @@ open class MyblogApplication
 fun main(args: Array<String>) {
     runApplication<MyblogApplication>(*args)
 }
-
-

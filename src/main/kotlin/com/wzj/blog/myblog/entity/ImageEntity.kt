@@ -1,6 +1,5 @@
 package com.wzj.blog.myblog.entity
 
-import com.google.gson.annotations.Expose
 
 class ImageEntity {
   var image_id :Int = 0             //ID 主键
@@ -9,7 +8,7 @@ class ImageEntity {
   var image_name:String?=null        //文件名称
   var image_suffix:String?=null        //文件后缀
   var user_id:Int=0   //用户ID
-  var image_address:String?=null        //地址
+  var image_address:String?=""        //地址
   var image_path:String?=null        //路径
 
     override fun toString(): String {
