@@ -10,7 +10,7 @@ import com.wzj.blog.myblog.entity.UserInfo
 interface  UserService {
 
     fun insertUser(user: UserInfo):Int
-    fun updateUserImagePathById(user: UserInfo): Int
+
     fun updateUserById(userId: UserInfo):Int
     fun updateUserPwdByName(userName: String,newUserPwd:String): Int
 
@@ -21,7 +21,6 @@ interface  UserService {
     fun queryUserByPhone(phone: String):UserInfo
     fun queryUserByName(userName: String):MutableList<UserInfo>
     fun queryUserByLoginName(userName: String):MutableList<LoginEntity>
-    fun queryUserByLoginPhone(userName: String):LoginEntity
     fun queryUserLikeByName(userName: String):MutableList<UserInfo>
 
     fun deleteUserByName(userName: String):Int

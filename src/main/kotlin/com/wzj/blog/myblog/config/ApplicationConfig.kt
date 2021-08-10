@@ -3,19 +3,15 @@ package com.wzj.blog.myblog.config
 import com.wzj.blog.myblog.listener.SessionListener
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters
-import org.springframework.boot.web.servlet.MultipartConfigFactory
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.GsonHttpMessageConverter
-import org.springframework.util.unit.DataSize
-import org.springframework.util.unit.DataUnit
 import org.springframework.web.servlet.config.annotation.*
 import java.nio.charset.Charset
 import javax.annotation.Resource
-import javax.servlet.MultipartConfigElement
 
 
 @Configuration
@@ -73,18 +69,6 @@ open class ApplicationConfig : WebMvcConfigurer {
         println("listener")
         return srb
     }
-
-
-
-
-
-//    @Bean
-//    fun multipartConfigElement(): MultipartConfigElement? {
-//        val factory = MultipartConfigFactory()
-//        factory.setLocation("/tmp/tomcat")
-//        factory.setMaxFileSize(DataSize.of(1024L * 1024L,DataUnit.MEGABYTES))
-//        return factory.createMultipartConfig()
-//    }
 
 //
 //    @Bean

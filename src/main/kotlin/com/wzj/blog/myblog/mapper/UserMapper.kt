@@ -1,5 +1,6 @@
 package com.wzj.blog.myblog.mapper
 
+import com.wzj.blog.myblog.entity.ImageEntity
 import com.wzj.blog.myblog.entity.LoginEntity
 import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.util.SqlUtil
@@ -17,11 +18,6 @@ import org.springframework.stereotype.Repository
 
     @Update("update ${SqlUtil.userInfo_Table} set USERIP=#{userIp},USEREMAIL=#{userEmail},USERPROFILEPHOTO=#{userProFilePhoto},USERPHONE=#{userPhone} ,USERREGISTRATIONTIME=#{userRegisrAtionTime} ,USERBIRTHDAY=#{userBirthDay} ,USERAGE=#{userAge} ,USERNICKNAME=#{userNickName},USERCONSTELLATION=#{userConstellAtion} where USERID=#{userId}")
     fun updateUserById(userId: UserInfo):Int
-
-    @Update("update ${SqlUtil.userInfo_Table} set USERPROFILEPHOTO=#{userProFilePhoto} where USERID=#{userId}")
-    fun updateUserImagePathById(user: UserInfo):Int
-
-
 
     @Update("update ${SqlUtil.userInfo_Table} set USERPWD=#{newUserPwd} where USERNAME=#{userName}")
     fun updateUserPwdByName(userName: String,newUserPwd:String): Int
@@ -49,12 +45,6 @@ import org.springframework.stereotype.Repository
 
     @Select("select * from ${SqlUtil.userInfo_Table} where USERNAME=#{userName}")
     fun queryUserByLoginName(userName: String):MutableList<LoginEntity>
-
-
-    @Select("select * from ${SqlUtil.userInfo_Table} where USERPHONE=#{userPhone}")
-    fun queryUserByLoginPhone(userPhone: String): LoginEntity
-
-
 
     @Delete("delete ${SqlUtil.userInfo_Table} where UserName=#{userName}")
     fun deleteUserByName(userName: String):Int

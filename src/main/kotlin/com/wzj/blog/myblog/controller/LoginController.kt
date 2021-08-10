@@ -2,7 +2,6 @@ package com.wzj.blog.myblog.controller
 
 import com.google.gson.Gson
 import com.wzj.blog.myblog.config.Constant
-import com.wzj.blog.myblog.entity.LoginEntity
 import com.wzj.blog.myblog.entity.ResultData
 import com.wzj.blog.myblog.entity.UserInfo
 import com.wzj.blog.myblog.result.Result
@@ -41,8 +40,6 @@ open class LoginController {
     @ResponseBody
     fun login(@RequestBody data: String?, request : HttpServletRequest):JSONObject{
 
-        var isUserName:Boolean = true
-
         if (CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)==null) return Result.failure300ToJSON("格式错误!!!")
         val resultData = CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)
 
@@ -51,32 +48,15 @@ open class LoginController {
         val result = CheckReceivedDataUtil.JsonToClass1<UserInfo>(resultData.data)
       val login:UserInfo = if (result=== null)  UserInfo() else result
          logger.info(login.toString())
-
-        if (login?.userName.isNullOrBlank()){
-            isUserName=true
-            if (login?.userPhone.isNullOrBlank()){
-                isUserName=true
-                return Result.failure300ToJSON("用户名或手机号不能为空!")
-            }else{
-                isUserName=false
-            }
-        }
-
+        if (login.userName.isNullOrBlank())return Result.failure300ToJSON("用户名不能为空!!!")
         if (login.userPwd.isNullOrBlank())return Result.failure300ToJSON("用户密码不能为空!!!")
         if (login.userPwd!!.length<6)return Result.failure300ToJSON("密码长度不能少于6位字符")
-        var loginEntity:LoginEntity? =null
-        if (isUserName) {
-            //检查是否有此用户
-            val  logins = mainService.userService.queryUserByLoginName(login.userName!!)
-            loginEntity = logins[0]
-            if (logins.size<=0) return Result.failure300ToJSON("该用户未注册，请先注册")
-        }else{
-            loginEntity = mainService.userService.queryUserByLoginPhone(login.userPhone.toString())
-        }
-
-
+        //检查是否有此用户
+        val logins = mainService.userService.queryUserByLoginName(login.userName!!)
+        if (logins.size<=0) return Result.failure300ToJSON("该用户未注册，请先注册")
         //判断用户名密码
-        if (isUserName) if (login.userName !=loginEntity.userName) return Result.failure300ToJSON("用户名或密码不正确")
+        val loginEntity = logins[0]
+        if (login.userName !=loginEntity.userName)return Result.failure300ToJSON("用户名或密码不正确")
         if (login.userPwd !=loginEntity.userPwd)return Result.failure300ToJSON("用户名或密码不正确")
         //查询好友表中好友ID为此用户ID  并修改状态为在线状态
         val updateFriendsStatus = mainService.userFriendsService.updateFriendsStatus(login.userId, 0)
