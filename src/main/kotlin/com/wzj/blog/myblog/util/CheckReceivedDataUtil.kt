@@ -13,6 +13,10 @@ import net.sf.json.JsonConfig
 import org.apache.http.util.TextUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.HashMap
+
+
+
 
 
 @Slf4j
@@ -52,7 +56,6 @@ object CheckReceivedDataUtil {
 
             val asJsonObject = JsonObject().getAsJsonObject(json)
 
-//            val tc = Gson().fromJson<T>(json, object :TypeToken<t::class.java>() {}.getType())
             val tc = Gson().fromJson(asJsonObject, t::class.java)
             logger.info("JSON 映射成功")
             return tc as T
@@ -88,12 +91,18 @@ object CheckReceivedDataUtil {
         if (!isBadJson(json)) return null
         try {
             logger.info(json)
-            val jsonConfig = JsonConfig()
-            jsonConfig.rootClass = T::class.java
-            val jt = JSONObject.toBean(JSONObject.fromObject(json), jsonConfig)
+//          val jsonObj =   JSONObject.fromObject(json)
+//
+//            val classMap: MutableMap<String, Class<*>> = HashMap()
+//            classMap["stuList"] = T::class.java
+//
+//            val jt = JSONObject.toBean(jsonObj, T::class.java,classMap)
             logger.info("JSON 映射成功")
-            logger.info("JSON ${jt.toString()}")
-            return jt as T
+//            logger.info("JSON ${jt.toString()}")
+//            return jt as T
+
+           return Gson().fromJson(json,T::class.java)
+
 
         } catch (e: Exception) {
             e.printStackTrace()

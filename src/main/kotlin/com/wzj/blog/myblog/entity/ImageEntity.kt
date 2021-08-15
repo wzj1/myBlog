@@ -1,6 +1,5 @@
 package com.wzj.blog.myblog.entity
 
-import com.google.gson.annotations.Expose
 
 class ImageEntity {
   var image_id :Int = 0             //ID 主键

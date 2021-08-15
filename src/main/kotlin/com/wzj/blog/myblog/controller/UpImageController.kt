@@ -8,6 +8,7 @@ import com.wzj.blog.myblog.service.MainService
 import com.wzj.blog.myblog.util.CheckReceivedDataUtil
 import com.wzj.blog.myblog.util.SeesionUtil
 import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil
+import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil2
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -31,23 +32,23 @@ class UpImageController {
     @RequestMapping("/uploadImg")
     @CrossOrigin
     @ResponseBody
-    fun uploadPicture(@RequestParam(value="file",required=false) file: MultipartFile,@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
+    fun uploadPicture(@RequestParam(value="file",required=false) file: MultipartFile,@RequestParam(value="data",required=false) data: String?,request : HttpServletRequest):String{
 
-        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
-        val imageEntity = CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
+//        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+
+        val imageEntity = Gson().fromJson(data,ImageEntity::class.java)
+//        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
         if (imageEntity==null)  return Result.failure300("用户不存在!")
 
         if (imageEntity.user_id<=0) return Result.failure300("缺少userId!!!")
-        if (imageEntity.image_type<=0) return Result.failure300("缺少image_type类型!!!")
-        val uploadUtil  = UploadImageUtil()
-        val path = uploadUtil.uploadPicture(file,request)
-        if (path.isNullOrBlank()) return Result.failure300("图片上传失败!!!")
-       val image = ImageEntity()
-        image.image_name=uploadUtil.getFileName()
-        image.image_suffix=uploadUtil.getFileSuffix()
-        image.image_data=uploadUtil.getFileTime()
-        image.image_path=path
+        if (imageEntity.image_type<0) return Result.failure300("缺少image_type类型!!!")
+        val uploadUtil  = UploadImageUtil2.getIncense().uploadFile(imageEntity.image_type,file)
+        if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result.failure300("图片上传失败!!!")
+        val image = ImageEntity()
+        image.image_name=UploadImageUtil2.getIncense().getFileName()
+        image.image_suffix=UploadImageUtil2.getIncense().getFileSuffix()
+        image.image_data=UploadImageUtil2.getIncense().getFileTime()
+        image.image_path=UploadImageUtil2.getIncense().getFilePath()
         image.user_id=imageEntity.user_id
         image.image_type=imageEntity.image_type
         val insertImage = mainService.imageService.insertImage(image)
@@ -55,7 +56,7 @@ class UpImageController {
             Result.log("上传失败")
             return Result.failure300("图片上传失败!!")
         }
-        return Result.success200("插入成功!!")
+        return Result.success200("上传成功!!")
     }
 
     /**
@@ -170,7 +171,7 @@ class UpImageController {
 
         if (image.image_id<=0) return Result.failure300("缺少image_id!!!")
         val insertImage = mainService.imageService.deleteById(image.image_id)
-        if (insertImage<=0) {
+        if (insertImage<0) {
             Result.log("删除失败")
             return Result.failure300("无图片资源！！")
         }

@@ -1,5 +1,6 @@
 package com.wzj.blog.myblog.util.uploadImage
 
+import com.wzj.blog.myblog.config.Constant
 import com.wzj.blog.myblog.result.Result
 import com.wzj.blog.myblog.util.timeUtil.TimeUtil
 import org.springframework.web.multipart.MultipartFile
@@ -18,8 +19,6 @@ open class UploadImageUtil {
     var ImageFileName: String? = null
     var ImageFileSuffix: String? = null
     var ImageFileTime: String? = null
-    var image_https="https://www.wzjlb.com.cn"
-    var image_prot="8443"
 
 
     /**
@@ -114,7 +113,7 @@ open class UploadImageUtil {
             fileTime=  TimeUtil.getTime()
             upFileName=  "image_" + fileTime + "_" + TimeUtil.getRandom() + fileF
         }
-        urlpath =  "$image_https:$image_prot/$upFileName"
+        urlpath =  "${Constant.image_IP}:${Constant.image_prot}/$upFileName"
         val newFile = File("$filePath/", upFileName)
         // 如果不存在，创建一个副本
         if (!newFile.exists()) {

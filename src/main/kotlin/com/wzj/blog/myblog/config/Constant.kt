@@ -13,4 +13,31 @@ object Constant {
     const val ERROR_CLEAR = "301"
 
 
+    //是否生产环境  更改存储文件路径
+
+    const val isStorageFilePath:Boolean = true
+
+    //生产默认文件地址
+    const val imagePath:String = "/var/image/upload"
+
+    //测试默认文件地址
+//    const val imagePath:String = "/Volumes/AS/uploadImagePath/"
+
+
+    /**
+     * 图片显示地址
+     *     private var image_https = "https://www.wzjlb.com.cn"
+    private var image_prot = "8443"
+     */
+
+//    生产
+    const val image_IP:String = "https://www.wzjlb.com.cn"
+    const val image_prot:String = "8443"
+
+
+    //测试
+//    const val image_IP:String = "172.20.10.3"
+//    const val image_IP:String = "192.168.1.10"
+//    const val image_prot:String = "8080"
+
 }

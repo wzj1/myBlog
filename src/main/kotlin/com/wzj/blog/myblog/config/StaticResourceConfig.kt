@@ -29,10 +29,12 @@ open class StaticResourceConfig : HandlerInterceptor {
         println(request.requestURI)
         logger.info("timestamp：$timestamp $\r\n")
         logger.info("sign：$sign $\r\n")
-        if (timestamp == null || timestamp.trim { it <= ' ' } == "" || sign == null || sign.trim { it <= ' ' } == "") {
-            logger.error("请求头缺失")
-            getResponse("请求头缺失", response)
-            return false
+        if (request.requestURI!="/login") {
+            if (timestamp == null || timestamp.trim { it <= ' ' } == "" || sign == null || sign.trim { it <= ' ' } == "") {
+                logger.error("请求头缺失")
+                getResponse("请求头缺失", response)
+                return false
+            }
         }
 
         if (request.requestURI!="/login") {

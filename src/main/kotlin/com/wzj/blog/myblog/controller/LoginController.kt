@@ -40,14 +40,18 @@ open class LoginController {
     @ResponseBody
     fun login(@RequestBody data: String?, request : HttpServletRequest):JSONObject{
 
-        if (CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)==null) return Result.failure300ToJSON("格式错误!!!")
-        val resultData = CheckReceivedDataUtil.JsonToClass1<ResultData<String>>(data)
 
-        logger.info(resultData.toString())
-        if (resultData === null )  return Result.failure300ToJSON("参数缺失 data 字段")
-        val result = CheckReceivedDataUtil.JsonToClass1<UserInfo>(resultData.data)
-      val login:UserInfo = if (result=== null)  UserInfo() else result
+
+        if (CheckReceivedDataUtil.JsonToClass1<ResultData<UserInfo>>(data)==null) return Result.failure300ToJSON("格式错误!!!")
+        val login = CheckReceivedDataUtil.JsonToClass1<UserInfo>(data)
+
+//        logger.info(resultData.toString())
+//        if (resultData === null )  return Result.failure300ToJSON("参数缺失 data 字段")
+//        if (resultData.data === null )  return Result.failure300ToJSON("参数缺失")
+////        val result = CheckReceivedDataUtil.JsonToClass1<UserInfo>(resultData.data)
+//        val login= resultData.data!!
          logger.info(login.toString())
+        if (login === null )  return Result.failure300ToJSON("参数缺失")
         if (login.userName.isNullOrBlank())return Result.failure300ToJSON("用户名不能为空!!!")
         if (login.userPwd.isNullOrBlank())return Result.failure300ToJSON("用户密码不能为空!!!")
         if (login.userPwd!!.length<6)return Result.failure300ToJSON("密码长度不能少于6位字符")
