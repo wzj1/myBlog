@@ -105,7 +105,7 @@ class UpImageController {
         image.image_suffix = uploadUtil.getFileSuffix()
         image.image_data = uploadUtil.getFileTime()
         image.image_path = path
-       val count = mainService.imageService.queryById(image.image_id)
+        val count = mainService.imageService.queryById(image.image_id)
         if (count==null) return Result.failure300("修改失败，资源不存在!!!")
 
         val insertImage = mainService.imageService.updateImage(image)
