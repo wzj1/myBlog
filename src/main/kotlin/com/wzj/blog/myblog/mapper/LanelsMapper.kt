@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Mapper
 @Repository
 interface LanelsMapper {
-    @Insert("insert into ${SqlUtil.Lanels_Table}(LABELID,LABELNAME,LABELALIAS,LABELDESCRIPTION) values(${SqlUtil.seq_Lanels},#{labelName},#{labelAlias},#{labelDescription})")
+    @Insert("insert into ${SqlUtil.Lanels_Table}(LABELNAME,LABELALIAS,LABELDESCRIPTION) values(#{labelName},#{labelAlias},#{labelDescription})")
     fun addLanels(labelName:String?,labelAlias:String?,labelDescription:String?):Int
 
     @Update("update ${SqlUtil.Lanels_Table} set LABELNAME=#{labelName},LABELALIAS=#{labelAlias},LABELDESCRIPTION=#{labelDescription} where LABELID=#{labelId} ")

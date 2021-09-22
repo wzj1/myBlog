@@ -1,6 +1,5 @@
 package com.wzj.blog.myblog.config
 
-import com.wzj.blog.myblog.listener.SessionListener
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
@@ -62,13 +61,13 @@ open class ApplicationConfig : WebMvcConfigurer {
         converters.add(responseBodyConverter())
     }
 
-    @Bean
-    fun listenerRegist(): ServletListenerRegistrationBean<*>? {
-        val srb= ServletListenerRegistrationBean<SessionListener>()
-        srb.listener = SessionListener()
-        println("listener")
-        return srb
-    }
+//    @Bean
+//    fun listenerRegist(): ServletListenerRegistrationBean<*>? {
+//        val srb= ServletListenerRegistrationBean<SessionListener>()
+//        srb.listener = SessionListener()
+//        println("listener")
+//        return srb
+//    }
 
 //
 //    @Bean

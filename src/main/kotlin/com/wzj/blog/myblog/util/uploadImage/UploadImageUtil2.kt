@@ -129,7 +129,13 @@ class UploadImageUtil2 {
 
         if (imagePath.isNullOrEmpty()) imagePath =Constant.imagePath
 
-        val path = "$imageIp/${if (imageType==0)"upload/" else "photo/"}"
+        val path = "$imageIp/${
+            when(imageType){
+                0->"upload/"
+                1->"apk"
+                else -> "photo/"
+            }
+        }"
 
         // 获取上传的位置（存放图片的文件夹）,如果不存在，创建文件夹
         val fileParent = File(imagePath)

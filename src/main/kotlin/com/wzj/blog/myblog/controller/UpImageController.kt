@@ -1,14 +1,15 @@
 package com.wzj.blog.myblog.controller
 
 import com.google.gson.Gson
-import com.wzj.blog.myblog.config.Constant
+import com.wzj.blog.myblog.config.rsaUtil.annotation.Encrypt
+import com.wzj.blog.myblog.entity.BaseData
 import com.wzj.blog.myblog.entity.ImageEntity
-import com.wzj.blog.myblog.result.Result
+import com.wzj.blog.myblog.result.Result1
 import com.wzj.blog.myblog.service.MainService
 import com.wzj.blog.myblog.util.CheckReceivedDataUtil
-import com.wzj.blog.myblog.util.SeesionUtil
-import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil
 import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil2
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -23,6 +24,11 @@ import javax.servlet.http.HttpServletRequest
 class UpImageController {
     @Autowired
     lateinit var mainService: MainService
+
+    var logger: Logger = LoggerFactory.getLogger(UpImageController::class.java)
+
+
+
     /**
      * 上传图片
      * @param file 图片文件
@@ -31,32 +37,34 @@ class UpImageController {
      */
     @RequestMapping("/uploadImg")
     @CrossOrigin
+    @Encrypt
     @ResponseBody
-    fun uploadPicture(@RequestParam(value="file",required=false) file: MultipartFile,@RequestParam(value="data",required=false) data: String?,request : HttpServletRequest):String{
-
-//        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
-
-        val imageEntity = Gson().fromJson(data,ImageEntity::class.java)
-//        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (imageEntity==null)  return Result.failure300("用户不存在!")
-
-        if (imageEntity.user_id<=0) return Result.failure300("缺少userId!!!")
-        if (imageEntity.image_type<0) return Result.failure300("缺少image_type类型!!!")
-        val uploadUtil  = UploadImageUtil2.getIncense().uploadFile(imageEntity.image_type,file)
-        if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result.failure300("图片上传失败!!!")
+    fun uploadPicture(
+        @RequestParam(value = "file", required = false) file: MultipartFile,
+        @RequestParam(value = "data", required = false) data: String?,
+        request: HttpServletRequest,
+    ): BaseData<Any?> {
+        val imageEntity = Gson().fromJson(data, ImageEntity::class.java)
+        if (imageEntity == null) return Result1.failure300("用户不存在!")
+        if (imageEntity.user_id <= 0) return Result1.failure300("缺少userId!!!")
+        if (imageEntity.image_type < 0) return Result1.failure300("缺少image_type类型!!!")
+        //保存图片及图片相关信息
+        UploadImageUtil2.getIncense().uploadFile(imageEntity.image_type, file)
+        if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
         val image = ImageEntity()
-        image.image_name=UploadImageUtil2.getIncense().getFileName()
-        image.image_suffix=UploadImageUtil2.getIncense().getFileSuffix()
-        image.image_data=UploadImageUtil2.getIncense().getFileTime()
-        image.image_path=UploadImageUtil2.getIncense().getFilePath()
-        image.user_id=imageEntity.user_id
-        image.image_type=imageEntity.image_type
+        image.image_name = UploadImageUtil2.getIncense().getFileName()
+        image.image_suffix = UploadImageUtil2.getIncense().getFileSuffix()
+        image.image_data = UploadImageUtil2.getIncense().getFileTime()
+        image.image_path = UploadImageUtil2.getIncense().getFilePath()
+        image.user_id = imageEntity.user_id
+        image.image_type = imageEntity.image_type
         val insertImage = mainService.imageService.insertImage(image)
-        if (insertImage<=0) {
-            Result.log("上传失败")
-            return Result.failure300("图片上传失败!!")
+        if (insertImage <= 0) {
+
+            logger.info("上传失败")
+            return Result1.failure300("图片上传失败!!")
         }
-        return Result.success200("上传成功!!")
+        return Result1.success200("上传成功!!")
     }
 
     /**
@@ -65,21 +73,22 @@ class UpImageController {
     @ResponseBody
     @CrossOrigin
     @PostMapping(value = ["/findImg"])
-    fun findImg(@ModelAttribute("data") data: String?,request : HttpServletRequest):String{
+    fun findImg(@ModelAttribute("data") data: String?, request: HttpServletRequest):BaseData<Any?> {
 
-        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,
+                data) == null
+        ) return Result1.failure300("格式错误!!!")
         val imageEntity = CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (imageEntity==null)  return Result.failure300("用户不存在!")
+        if (imageEntity == null) return Result1.failure300("用户不存在!")
 
-        if (imageEntity.image_id<=0) return Result.failure300("缺少image_id!!!")
+        if (imageEntity.image_id <= 0) return Result1.failure300("缺少image_id!!!")
 
         val insertImage = mainService.imageService.queryById(imageEntity.image_id)
-        if (insertImage==null) {
-            Result.log("查询失败")
-            return Result.failure300("无图片资源！！")
+        if (insertImage == null) {
+            logger.info("查询失败")
+            return Result1.failure300("无图片资源！！")
         }
-        return Result.success200(Gson().toJson(insertImage),"查询成功!!")
+        return Result1.success200(Gson().toJson(insertImage), "查询成功!!")
     }
 
     /**
@@ -90,30 +99,37 @@ class UpImageController {
     @ResponseBody
     @CrossOrigin
     @PostMapping(value = ["/updateImg"])
-    fun updateImg(@RequestParam(value = "file", required = false) file: MultipartFile, @ModelAttribute("data") data: String?,request : HttpServletRequest): String {
+    fun updateImg(
+        @RequestParam(value = "file", required = false) file: MultipartFile,
+        @ModelAttribute("data") data: String?,
+        request: HttpServletRequest,
+    ):BaseData<Any?> {
 
-        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,
+                data) == null
+        ) return Result1.failure300("格式错误!!!")
         val image = CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (image==null)  return Result.failure300("用户不存在!")
+        if (image == null) return Result1.failure300("用户不存在!")
 
-        if (image.image_id<=0) return Result.failure300("缺少image_id!!!")
-        val uploadUtil  = UploadImageUtil()
-        val path = uploadUtil.uploadPicture(file,  request)
-        if (path.isNullOrBlank()) return Result.failure300("图片上传失败!!!")
-        image.image_name = uploadUtil.getFileName()
-        image.image_suffix = uploadUtil.getFileSuffix()
-        image.image_data = uploadUtil.getFileTime()
-        image.image_path = path
-       val count = mainService.imageService.queryById(image.image_id)
-        if (count==null) return Result.failure300("修改失败，资源不存在!!!")
-
+        if (image.image_id <= 0) return Result1.failure300("缺少image_id!!!")
+        //保存图片及图片相关信息
+        UploadImageUtil2.getIncense().uploadFile(image.image_type, file)
+        if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
+        val images = ImageEntity()
+        images.image_name = UploadImageUtil2.getIncense().getFileName()
+        images.image_suffix = UploadImageUtil2.getIncense().getFileSuffix()
+        images.image_data = UploadImageUtil2.getIncense().getFileTime()
+        images.image_path = UploadImageUtil2.getIncense().getFilePath()
+        images.user_id = image.user_id
+        images.image_type = image.image_type
+        val count = mainService.imageService.queryById(image.image_id)
+        if (count == null) return Result1.failure300("修改失败，资源不存在!!!")
         val insertImage = mainService.imageService.updateImage(image)
         if (insertImage <= 0) {
-            Result.log("上传失败")
-            return Result.failure300("修改失败,图片上传失败!!")
+            logger.info("上传失败")
+            return Result1.failure300("修改失败,图片上传失败!!")
         }
-        return Result.success200(Gson().toJson(insertImage), "修改成功!!")
+        return Result1.success200(Gson().toJson(insertImage), "修改成功!!")
     }
 
 
@@ -123,14 +139,14 @@ class UpImageController {
     @ResponseBody
     @CrossOrigin
     @PostMapping(value = ["/findImgAll"])
-    fun findImgAll():String{
+    fun findImgAll():BaseData<Any?> {
 
         val insertImage = mainService.imageService.queryforList()
-        if (insertImage.size==0) {
-            Result.log("查询失败")
-            return Result.failure300("无图片资源！！")
+        if (insertImage.size == 0) {
+            logger.info("查询失败")
+            return Result1.failure300("无图片资源！！")
         }
-        return Result.success200(Gson().toJson(insertImage),"查询成功!!")
+        return Result1.success200(Gson().toJson(insertImage), "查询成功!!")
     }
 
     /**
@@ -140,20 +156,21 @@ class UpImageController {
     @ResponseBody
     @CrossOrigin
     @RequestMapping("/findUserImg")
-    fun findUserImg( @ModelAttribute("data") data: String?,request : HttpServletRequest):String{
-        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+    fun findUserImg(@ModelAttribute("data") data: String?, request: HttpServletRequest):BaseData<Any?> {
+        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,
+                data) == null
+        ) return Result1.failure300("格式错误!!!")
         val image = CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (image==null)  return Result.failure300("用户不存在!")
+        if (image == null) return Result1.failure300("用户不存在!")
 
-        if (image.user_id<=0) return Result.failure300("缺少userId!!!")
+        if (image.user_id <= 0) return Result1.failure300("缺少userId!!!")
 
         val insertImage = mainService.imageService.queryByUserId(image.user_id)
-        if (insertImage.size==0) {
-            Result.log("查询失败")
-            return Result.failure300("无图片资源！！")
+        if (insertImage.size == 0) {
+            logger.info("查询失败")
+            return Result1.failure300("无图片资源！！")
         }
-        return Result.success200(Gson().toJson(insertImage),"查询成功!!")
+        return Result1.success200(Gson().toJson(insertImage), "查询成功!!")
     }
 
     /**
@@ -163,19 +180,20 @@ class UpImageController {
     @ResponseBody
     @CrossOrigin
     @PostMapping(value = ["/deleteImg"])
-    fun deleteImg( @ModelAttribute("data") data: String?,request : HttpServletRequest):String{
-        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+    fun deleteImg(@ModelAttribute("data") data: String?, request: HttpServletRequest):BaseData<Any?> {
+        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,
+                data) == null
+        ) return Result1.failure300("格式错误!!!")
         val image = CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (image==null)  return Result.failure300("用户不存在!")
+        if (image == null) return Result1.failure300("用户不存在!")
 
-        if (image.image_id<=0) return Result.failure300("缺少image_id!!!")
+        if (image.image_id <= 0) return Result1.failure300("缺少image_id!!!")
         val insertImage = mainService.imageService.deleteById(image.image_id)
-        if (insertImage<0) {
-            Result.log("删除失败")
-            return Result.failure300("无图片资源！！")
+        if (insertImage < 0) {
+            logger.info("删除失败")
+            return Result1.failure300("无图片资源！！")
         }
-        return Result.success200(Gson().toJson(insertImage),"删除成功!!")
+        return Result1.success200(Gson().toJson(insertImage), "删除成功!!")
     }
 
     /**
@@ -185,19 +203,20 @@ class UpImageController {
     @ResponseBody
     @CrossOrigin
     @PostMapping(value = ["/deleteUserImg"])
-    fun deleteUserImg( @ModelAttribute("data") data: String?,request : HttpServletRequest):String{
-        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,data)==null) return Result.failure300("格式错误!!!")
+    fun deleteUserImg(@ModelAttribute("data") data: String?, request: HttpServletRequest):BaseData<Any?> {
+        if (CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java,
+                data) == null
+        ) return Result1.failure300("格式错误!!!")
         val image = CheckReceivedDataUtil.JsonToClass<ImageEntity>(ImageEntity::class.java, data)
-        val sessionUserId = SeesionUtil.getSessionUserId(request) ?: return Result.failure(Constant.ERROR_CLEAR, "登陆状态失效,请重新登陆!")
-        if (image==null)  return Result.failure300("用户不存在!")
+        if (image == null) return Result1.failure300("用户不存在!")
 
-        if (image.user_id<=0) return Result.failure300("缺少userId!!!")
+        if (image.user_id <= 0) return Result1.failure300("缺少userId!!!")
         val insertImage = mainService.imageService.deleteByUserId(image.user_id)
-        if (insertImage<=0) {
-            Result.log("删除失败")
-            return Result.failure300("无图片资源！！")
+        if (insertImage <= 0) {
+            logger.info("删除失败")
+            return Result1.failure300("无图片资源！！")
         }
-        return Result.success200(Gson().toJson(insertImage),"删除成功!!")
+        return Result1.success200(Gson().toJson(insertImage), "删除成功!!")
     }
 
 

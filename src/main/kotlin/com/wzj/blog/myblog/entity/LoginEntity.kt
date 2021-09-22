@@ -16,6 +16,13 @@ class LoginEntity{
     var userConstellAtion:String?=null        //用户星座
     var userId:Int=0      //用户ID
     var friendsData:String? =null  //好友数据
+    //登录的时候返回
+    var token:String? =null  //token
+    var status:Int = -1
+
+    //修改密码时需要
+    var newUserPwd:String?=null      //用户新密码
+    var userPwdType:Int?=null      // 0 修改密码  1 忘记密码
 
 
     override fun toString(): String {
@@ -32,6 +39,7 @@ class LoginEntity{
                 .append("用户星座: $userConstellAtion \r\n")
                 .append("用户ID: $userId \r\n")
                 .append("好友数据: $friendsData \r\n")
+                .append("token: $token \r\n")
                 .toString()
     }
 

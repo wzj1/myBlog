@@ -10,6 +10,13 @@ object SqlUtil {
     //用户表序列
     const val seq_UserInfo: String = "SEQ_USERINFO.nextval"
 
+     //token（登录成功后才会有）
+    const val userToken_Table: String = "USERTOKEN"
+
+    //Token序列
+    const val seq_UserToken: String = "SEQ_TOKEN.nextval"
+
+
     //图片、头像表
     const val Image_Lob_Table: String = "IMAGE_LOB"
 
@@ -69,6 +76,10 @@ object SqlUtil {
     const val seq_sorts: String = "SEQ_SORTS.nextval"
 
 
+
+
+    //APP版本控制
+    const val YESAPI_APPVER_APK: String = "YESAPI_APPVER_APK"
 
 
 }

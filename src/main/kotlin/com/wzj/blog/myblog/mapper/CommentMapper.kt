@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository
  interface CommentMapper {
 
     // 添加博文数据
-    @Insert("insert into ${SqlUtil.Comments_Table}(USERID,ARTICLEID,COMMENTLIKECOUNT,COMMENTDATE,PARENTCOMMENTID,COMMENTCONTENT,COMMENTID) values(#{userid},#{articleid},#{userid},#{commentLikeCount},#{commentDate},${SqlUtil.seq_Comments},#{commentContent},${SqlUtil.seq_Comments})")
+    @Insert("insert into ${SqlUtil.Comments_Table}(USERID,ARTICLEID,COMMENTLIKECOUNT,COMMENTDATE,PARENTCOMMENTID,COMMENTCONTENT) values(#{userid},#{articleid},#{userid},#{commentLikeCount},#{commentDate},#{commentContent}")
     fun addComment(comment: CommentEntity):Int
 
     //修改点赞数

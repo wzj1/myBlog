@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
  interface SortsMapper {
 
-    @Insert("insert into ${SqlUtil.Sorts_Table}(SORTID,SORTNAME,SORTALIAS,SORTDESCRIPTION,PARENTSORTID) values(${SqlUtil.seq_sorts},#{sortName},#{sortAlias},#{sortDescription},#{parentSortid})")
+    @Insert("insert into ${SqlUtil.Sorts_Table}(SORTNAME,SORTALIAS,SORTDESCRIPTION,PARENTSORTID) values(#{sortName},#{sortAlias},#{sortDescription},#{parentSortid})")
     fun addSorts(sortName:String?,sortAlias:String?,sortDescription:String?,parentSortid:Int):Int
 
     @Update("update  ${SqlUtil.Sorts_Table} set SORTNAME=#{sortName},SORTALIAS=#{sortAlias},SORTDESCRIPTION=#{sortDescription},PARENTSORTID=#{parentSortid} where SORTID=#{sortid}")

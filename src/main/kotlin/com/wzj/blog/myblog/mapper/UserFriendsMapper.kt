@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Mapper
 @Repository
 interface UserFriendsMapper {
-    @Insert("insert into ${SqlUtil.UserFriends_Table}(ID,USERID,USERFRIENDSID,USERNOTE,USERSTATUS) values(${SqlUtil.seq_UserFriends},#{userId},#{userFriendsId},#{userNote},#{userStatus})")
+    @Insert("insert into ${SqlUtil.UserFriends_Table}(USERID,USERFRIENDSID,USERNOTE,USERSTATUS) values(#{userId},#{userFriendsId},#{userNote},#{userStatus})")
     fun insertFriends(friends: UserFriendsEntity): Int
 
     @Update("update ${SqlUtil.UserFriends_Table} set USERNOTE=#{userNote},USERSTATUS=#{userStatus}  where  USERID=#{userId} and USERFRIENDSID=#{userFriendsId} ")

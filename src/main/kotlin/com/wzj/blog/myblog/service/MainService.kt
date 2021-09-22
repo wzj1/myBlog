@@ -1,5 +1,6 @@
 package com.wzj.blog.myblog.service
 
+import com.wzj.blog.myblog.service.apk.ApkService
 import com.wzj.blog.myblog.service.imageService.ImageService
 import com.wzj.blog.myblog.service.userFriends.UserFriendsService
 import com.wzj.blog.myblog.service.userService.UserService
@@ -9,7 +10,9 @@ import com.wzj.blog.myblog.service.setting.atitleSort.ArtitleSortService
 import com.wzj.blog.myblog.service.comment.CommentService
 import com.wzj.blog.myblog.service.lanels.LanelsService
 import com.wzj.blog.myblog.service.sorts.SortsService
+import com.wzj.blog.myblog.service.token.TokenService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service
  * 统一管理表
  */
 @Service
+@Component
 open class MainService {
 
     /**
@@ -84,6 +88,21 @@ open class MainService {
     lateinit var sortsService: SortsService
 
 
+
+
+    /**
+     * 分类表
+     */
+    @Autowired
+    lateinit var tokenService: TokenService
+
+
+
+    /**
+     * APK版本控制
+     */
+    @Autowired
+    lateinit var apkService: ApkService
 
 
 

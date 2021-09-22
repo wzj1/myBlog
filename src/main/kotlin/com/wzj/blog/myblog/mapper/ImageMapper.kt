@@ -15,7 +15,7 @@ interface ImageMapper{
 
    //{str,jdbcType=VARCHAR}
 
-   @Insert("insert into IMAGE_LOB(IMAGE_ID,IMAGE_TYPE,IMAGE_DATA,IMAGE_NAME,IMAGE_SUFFIX,USER_ID,IMAGE_ADDRESS,IMAGE_PATH) values(${SqlUtil.seq_Image_Lob},#{image_type},#{image_data,jdbcType=VARCHAR},#{image_name,jdbcType=VARCHAR},#{image_suffix,jdbcType=VARCHAR},#{user_id},#{image_address,jdbcType=VARCHAR},#{image_path,jdbcType=VARCHAR})")
+   @Insert("insert into ${SqlUtil.Image_Lob_Table}(IMAGE_TYPE,IMAGE_DATA,IMAGE_NAME,IMAGE_SUFFIX,USER_ID,IMAGE_ADDRESS,IMAGE_PATH) values(#{image_type},#{image_data,jdbcType=VARCHAR},#{image_name,jdbcType=VARCHAR},#{image_suffix,jdbcType=VARCHAR},#{user_id},#{image_address,jdbcType=VARCHAR},#{image_path,jdbcType=VARCHAR})")
    fun insertImage(image: ImageEntity):Int
 
    @Update("update ${SqlUtil.Image_Lob_Table} set USER_ID=#{user_id},IMAGE_DATA=#{image_data,jdbcType=VARCHAR},IMAGE_TYPE=#{image_type},IMAGE_NAME=#{image_name,jdbcType=VARCHAR},IMAGE_SUFFIX=#{image_suffix,jdbcType=VARCHAR},IMAGE_ADDRESS=#{image_address,jdbcType=VARCHAR},IMAGE_PATH=#{image_path,jdbcType=VARCHAR} where IMAGE_ID=#{image_id}")

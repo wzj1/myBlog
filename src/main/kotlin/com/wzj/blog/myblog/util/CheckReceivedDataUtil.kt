@@ -101,7 +101,7 @@ object CheckReceivedDataUtil {
 //            logger.info("JSON ${jt.toString()}")
 //            return jt as T
 
-           return Gson().fromJson(json,T::class.java)
+           return Gson().fromJson(json,object :TypeToken<T>(){}.type)
 
 
         } catch (e: Exception) {

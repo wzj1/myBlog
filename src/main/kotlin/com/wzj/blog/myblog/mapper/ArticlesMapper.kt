@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
     @Update("update  ${SqlUtil.Articles_Table} set ARTICLECOMMENTCOUNT=#{count} where ARTICLEID=#{articlesId}")
     fun insertCount(articlesId: Int,count: Int):Int
 
-    @Insert("insert into ${SqlUtil.Articles_Table}(ARTICLEID,USERID,ARTICLETITLE,ARTICLECONTENT,ARTICLEVIEWS,ARTICLECOMMENTCOUNT,ARTICLEDATE) values(${SqlUtil.seq_Articles},#{userid},#{articleTitle},#{articleContent},#{articleViews},#{articleCommentCount},#{articleDate})")
+    @Insert("insert into ${SqlUtil.Articles_Table}(ARTICLEID,USERID,ARTICLETITLE,ARTICLECONTENT,ARTICLEVIEWS,ARTICLECOMMENTCOUNT,ARTICLEDATE) values(#{userid},#{articleTitle},#{articleContent},#{articleViews},#{articleCommentCount},#{articleDate})")
     fun insertArticles(articles: ArticlesEntity):Int
 
     @Update("update  ${SqlUtil.Articles_Table} set USERID=#{userid},ARTICLETITLE=#{articleTitle},ARTICLECONTENT=#{articleContent},ARTICLEVIEWS=#{articleViews},ARTICLECOMMENTCOUNT=#{articleCommentCount},ARTICLEDATE=#{articleDate} where ARTICLEID=#{articlesId}")
