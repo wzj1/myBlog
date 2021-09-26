@@ -33,20 +33,19 @@ open class StaticResourceConfig : HandlerInterceptor {
         val timestamp = request.getHeader("timestamp")
         val sign = request.getHeader("sign")
         val token = request.getHeader("token")
-        val TRUE = if (request.getHeader("TRUE").isNullOrBlank())false else true
+        val TRUE = if (request.getHeader("TRUE").isNullOrBlank()) false else true
         try {
             Constant.version = request.getHeader("version").toInt()
         } catch (e: Exception) {
             logger.error(e.message)
         }
 
-
         println(request.requestURI)
         logger.info("timestamp：$timestamp $\r\n")
         logger.info("sign：$sign $\r\n")
         logger.info("token：$token $\r\n")
         if (!TRUE) {
-            if (request.requestURI != "/login" && request.requestURI != "/outLogin" && request.requestURI != "/user/registered" && request.requestURI != "/user/registeredPhone" && request.requestURI != "/downLoad") {
+            if (getStatus(request)) {
                 if (timestamp == null || timestamp.trim { it <= ' ' } == "" || sign == null || sign.trim { it <= ' ' } == "") {
                     logger.error("请求头缺失")
                     getResponse("请求头缺失", response)
@@ -98,5 +97,15 @@ open class StaticResourceConfig : HandlerInterceptor {
         out.close()
     }
 
+
+    /**
+     * 是否要过滤 某些路径，不需要请求头信息，或加解密等信息
+     * @param request 请求体
+     */
+    fun getStatus(request: HttpServletRequest):Boolean = when(request.requestURI){
+        "/login","/","/outLogin","/user/registered","/user/registeredPhone",
+        "/downLoadApk","/uploadApk" ,"/fileUpload"  ,"/fileDownLoad" -> false
+        else -> true
+    }
 
 }

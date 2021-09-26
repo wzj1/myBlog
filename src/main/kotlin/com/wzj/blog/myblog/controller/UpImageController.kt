@@ -50,12 +50,12 @@ class UpImageController {
         if (imageEntity.image_type < 0) return Result1.failure300("缺少image_type类型!!!")
         //保存图片及图片相关信息
         UploadImageUtil2.getIncense().uploadFile(imageEntity.image_type, file)
-        if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
+        if (UploadImageUtil2.getIncense().getFileUrl().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
         val image = ImageEntity()
         image.image_name = UploadImageUtil2.getIncense().getFileName()
         image.image_suffix = UploadImageUtil2.getIncense().getFileSuffix()
         image.image_data = UploadImageUtil2.getIncense().getFileTime()
-        image.image_path = UploadImageUtil2.getIncense().getFilePath()
+        image.image_path = UploadImageUtil2.getIncense().getFileUrl()
         image.user_id = imageEntity.user_id
         image.image_type = imageEntity.image_type
         val insertImage = mainService.imageService.insertImage(image)
@@ -114,12 +114,12 @@ class UpImageController {
         if (image.image_id <= 0) return Result1.failure300("缺少image_id!!!")
         //保存图片及图片相关信息
         UploadImageUtil2.getIncense().uploadFile(image.image_type, file)
-        if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
+        if (UploadImageUtil2.getIncense().getFileUrl().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
         val images = ImageEntity()
         images.image_name = UploadImageUtil2.getIncense().getFileName()
         images.image_suffix = UploadImageUtil2.getIncense().getFileSuffix()
         images.image_data = UploadImageUtil2.getIncense().getFileTime()
-        images.image_path = UploadImageUtil2.getIncense().getFilePath()
+        images.image_path = UploadImageUtil2.getIncense().getFileUrl()
         images.user_id = image.user_id
         images.image_type = image.image_type
         val count = mainService.imageService.queryById(image.image_id)

@@ -29,6 +29,8 @@ class UploadImageUtil2 {
     //上传后完整路径
     private var urlpath: String? = null
 
+    private var filePath: String? = null
+
     companion object{
 
         private var uploadImageUtil:UploadImageUtil2? =null
@@ -89,7 +91,10 @@ class UploadImageUtil2 {
 
     fun getFileName(): String? = imageName
 
-    fun getFilePath(): String? = urlpath
+    //文件保存 生成访问url
+    fun getFileUrl(): String? = urlpath
+    //文件保存 路径
+    fun getFilePath(): String? = filePath
 
     /**
      * 获取 文件后缀
@@ -132,7 +137,7 @@ class UploadImageUtil2 {
         val path = "$imageIp/${
             when(imageType){
                 0->"upload/"
-                1->"apk"
+                1->"apk/"
                 else -> "photo/"
             }
         }"
@@ -153,6 +158,7 @@ class UploadImageUtil2 {
         if (imageName.isNullOrEmpty()) {
             imageName = when(imageType){
                 0->"photo_" + fileNameTime + "_" + TimeUtil.getRandom()
+                1->"apk_" + fileNameTime + "_" + TimeUtil.getRandom()
                 else->"image_" + fileNameTime + "_" + TimeUtil.getRandom()
             }
 
@@ -166,7 +172,7 @@ class UploadImageUtil2 {
         if (!newFile.exists()) {
             newFile.createNewFile()
         }
-
+        filePath = newFile.path
         Result.log("上传到副本的文件： ${newFile.path}")
         // 将io上传到副本中
         try {

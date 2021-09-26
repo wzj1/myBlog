@@ -10,12 +10,10 @@ import com.wzj.blog.myblog.entity.LoginEntity
 import com.wzj.blog.myblog.result.Result1
 import com.wzj.blog.myblog.service.MainService
 import com.wzj.blog.myblog.util.*
-import com.wzj.blog.myblog.util.key.RSAUtil1
 import com.wzj.blog.myblog.util.phoneUtils.PhoneUtils
 import com.wzj.blog.myblog.util.timeUtil.TimeUtil
 import com.wzj.blog.myblog.util.uploadImage.UploadImageUtil2
 import lombok.extern.slf4j.Slf4j
-import net.sf.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -82,8 +80,7 @@ open class UserController {
         @ModelAttribute("data") data: String?,
         request: HttpServletRequest,
     ):BaseData<Any?> {
-        if (CheckReceivedDataUtil.JsonToClass<LoginEntity>(LoginEntity::class.java,
-                data) == null
+        if (CheckReceivedDataUtil.JsonToClass<LoginEntity>(LoginEntity::class.java,data) == null
         ) return Result1.failure300("格式错误!!!")
         val userInfo = CheckReceivedDataUtil.JsonToClass<LoginEntity>(LoginEntity::class.java, data)
 
@@ -101,12 +98,12 @@ open class UserController {
             try {
                 //保存图片及图片相关信息
                 UploadImageUtil2.getIncense().uploadFile(0, file)
-                if (UploadImageUtil2.getIncense().getFilePath().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
+                if (UploadImageUtil2.getIncense().getFileUrl().isNullOrBlank()) return Result1.failure300("图片上传失败!!!")
                 val image = ImageEntity()
                 image.image_name = UploadImageUtil2.getIncense().getFileName()
                 image.image_suffix = UploadImageUtil2.getIncense().getFileSuffix()
                 image.image_data = UploadImageUtil2.getIncense().getFileTime()
-                image.image_path = UploadImageUtil2.getIncense().getFilePath()
+                image.image_path = UploadImageUtil2.getIncense().getFileUrl()
                 image.user_id = userInfo.userId
                 image.image_type = 0
 
